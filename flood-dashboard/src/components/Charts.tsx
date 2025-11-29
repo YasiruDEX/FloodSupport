@@ -129,8 +129,8 @@ export function StatusByDistrictChart({ data, topN = 10 }: StatusByDistrictChart
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
@@ -149,7 +149,7 @@ export function StatusByDistrictChart({ data, topN = 10 }: StatusByDistrictChart
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
-          <Legend />
+          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
           {selectedStatuses.includes('Pending') && <Bar dataKey="Pending" stackId="a" fill={STATUS_COLORS.pending} />}
           {selectedStatuses.includes('Verified') && <Bar dataKey="Verified" stackId="a" fill={STATUS_COLORS.verified} />}
           {selectedStatuses.includes('Rescued') && <Bar dataKey="Rescued" stackId="a" fill={STATUS_COLORS.rescued} />}
@@ -232,8 +232,8 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
@@ -252,7 +252,7 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
-          <Legend />
+          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
           {selectedPriorities.includes('Critical') && <Bar dataKey="Critical" fill={PRIORITY_COLORS.critical} />}
           {selectedPriorities.includes('High') && <Bar dataKey="High" fill={PRIORITY_COLORS.high} />}
           {selectedPriorities.includes('Medium') && <Bar dataKey="Medium" fill={PRIORITY_COLORS.medium} />}
@@ -331,15 +331,15 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
             data={pieData}
             cx="50%"
-            cy="50%"
+            cy="40%"
             labelLine={false}
             label={renderLabel}
-            outerRadius={110}
+            outerRadius={85}
             fill="#8884d8"
             dataKey="value"
           >
@@ -355,6 +355,7 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
+          <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -428,15 +429,15 @@ export function PriorityPieChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
             data={pieData}
             cx="50%"
-            cy="50%"
+            cy="40%"
             labelLine={false}
             label={renderLabel}
-            outerRadius={110}
+            outerRadius={85}
             fill="#8884d8"
             dataKey="value"
           >
@@ -452,6 +453,7 @@ export function PriorityPieChart({ data }: ChartsProps) {
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
+          <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -521,8 +523,8 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+      <ResponsiveContainer width="100%" height={400}>
+        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
@@ -541,7 +543,7 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
-          <Legend />
+          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
           {showPeople && <Bar dataKey="Total People" fill="#3b82f6" />}
           {showCases && <Bar dataKey="Total Cases" fill="#10b981" />}
         </BarChart>
@@ -617,11 +619,11 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={280}>
-        <BarChart data={chartData} layout="vertical" margin={{ top: 20, right: 30, left: 100, bottom: 20 }}>
+      <ResponsiveContainer width="100%" height={320}>
+        <BarChart data={chartData} layout="vertical" margin={{ top: 20, right: 30, left: 120, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis type="number" tick={{ fill: '#64748b' }} />
-          <YAxis dataKey="name" type="category" tick={{ fill: '#64748b' }} />
+          <YAxis dataKey="name" type="category" tick={{ fill: '#64748b' }} width={110} />
           <Tooltip 
             contentStyle={{ 
               backgroundColor: '#fff', 
