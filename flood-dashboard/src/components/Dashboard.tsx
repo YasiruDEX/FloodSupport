@@ -49,19 +49,19 @@ export function StatsCards({
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-4">
       {cards.map((card) => (
         <div
           key={card.label}
-          className={`bg-white rounded-lg border border-slate-200 border-l-4 ${card.borderColor} p-4 shadow-sm hover:shadow-md transition-all`}
+          className={`bg-white rounded-lg border border-slate-200 border-l-4 ${card.borderColor} p-2 md:p-4 shadow-sm hover:shadow-md transition-all`}
         >
-          <div className="flex items-center justify-start mb-3">
-            <div className={`p-2 rounded-lg ${card.iconBg}`}>
-              <card.Icon size={20} className={card.iconColor} />
+          <div className="flex items-center justify-start mb-1.5 md:mb-3">
+            <div className={`p-1.5 md:p-2 rounded-lg ${card.iconBg}`}>
+              <card.Icon size={16} className={`md:w-5 md:h-5 ${card.iconColor}`} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-800">{card.value.toLocaleString()}</div>
-          <div className="text-xs text-slate-500 mt-1">{card.label}</div>
+          <div className="text-lg md:text-2xl font-bold text-slate-800">{card.value.toLocaleString()}</div>
+          <div className="text-[10px] md:text-xs text-slate-500 mt-0.5 md:mt-1 truncate">{card.label}</div>
         </div>
       ))}
     </div>
@@ -87,12 +87,12 @@ function SortableHeader({ label, sortKey, currentSort, onSort, align = 'right', 
   
   return (
     <th 
-      className={`px-4 py-3 ${align === 'left' ? 'text-left' : 'text-right'} font-medium ${colorClass} cursor-pointer hover:bg-slate-100 transition-colors select-none group`}
+      className={`px-2 md:px-4 py-2 md:py-3 ${align === 'left' ? 'text-left' : 'text-right'} font-medium ${colorClass} cursor-pointer hover:bg-slate-100 transition-colors select-none group text-[10px] md:text-sm whitespace-nowrap`}
       onClick={() => onSort(sortKey)}
     >
-      <div className={`flex items-center gap-1.5 ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
+      <div className={`flex items-center gap-0.5 md:gap-1.5 ${align === 'right' ? 'justify-end' : 'justify-start'}`}>
         <span>{label}</span>
-        <span className={`transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}>
+        <span className={`transition-opacity hidden md:inline ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}>
           {isActive ? (
             currentSort.direction === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />
           ) : (
@@ -136,19 +136,19 @@ export function DistrictTable({ data }: DistrictTableProps) {
   }, [data, sortConfig]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+    <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="px-3 md:px-6 py-2 md:py-4 border-b border-slate-100 bg-slate-50/50">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-slate-800 uppercase tracking-wide">
-            District-wise Summary
+          <h3 className="text-xs md:text-base font-semibold text-slate-800 uppercase tracking-wide">
+            District Summary
           </h3>
-          <div className="text-xs text-slate-500">
-            Click column headers to sort
+          <div className="text-[10px] md:text-xs text-slate-500 hidden sm:block">
+            Tap to sort
           </div>
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-xs md:text-sm">
           <thead className="bg-slate-50/80 border-b border-slate-200">
             <tr>
               <SortableHeader label="District" sortKey="district" currentSort={sortConfig} onSort={handleSort} align="left" />
@@ -171,65 +171,65 @@ export function DistrictTable({ data }: DistrictTableProps) {
                 key={row.district}
                 className={`hover:bg-blue-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}
               >
-                <td className="px-4 py-3.5 font-medium text-slate-800">{row.district}</td>
-                <td className="px-4 py-3.5 text-right font-bold text-indigo-600">{row.total}</td>
-                <td className="px-4 py-3.5 text-right text-slate-600">{row.totalPeople.toLocaleString()}</td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 font-medium text-slate-800 whitespace-nowrap">{row.district}</td>
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right font-bold text-indigo-600">{row.total}</td>
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right text-slate-600">{row.totalPeople.toLocaleString()}</td>
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-amber-50 border border-amber-200 text-amber-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.pending}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.verified}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-teal-50 border border-teal-200 text-teal-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.rescued}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.cannotContact}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-orange-50 border border-orange-200 text-orange-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-orange-50 border border-orange-200 text-orange-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.missing}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-red-100 border border-red-300 text-red-700 rounded-full text-xs font-bold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-red-100 border border-red-300 text-red-700 rounded-full text-[10px] md:text-xs font-bold">
                     {row.critical}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
                   <span className="text-orange-600 font-medium">{row.high}</span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
                   <span className="text-yellow-600 font-medium">{row.medium}</span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
                   <span className="text-green-600 font-medium">{row.low}</span>
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot className="bg-gradient-to-r from-slate-100 to-slate-50 border-t-2 border-slate-200">
-            <tr className="font-bold">
-              <td className="px-4 py-4 text-slate-800">Total</td>
-              <td className="px-4 py-4 text-right text-indigo-700">{data.reduce((sum, row) => sum + row.total, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-slate-800">{data.reduce((sum, row) => sum + row.totalPeople, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-amber-700">{data.reduce((sum, row) => sum + row.pending, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-emerald-700">{data.reduce((sum, row) => sum + row.verified, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-teal-700">{data.reduce((sum, row) => sum + row.rescued, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-rose-700">{data.reduce((sum, row) => sum + row.cannotContact, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-orange-700">{data.reduce((sum, row) => sum + row.missing, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-red-700">{data.reduce((sum, row) => sum + row.critical, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-orange-600">{data.reduce((sum, row) => sum + row.high, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-yellow-600">{data.reduce((sum, row) => sum + row.medium, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-green-600">{data.reduce((sum, row) => sum + row.low, 0).toLocaleString()}</td>
+            <tr className="font-bold text-[10px] md:text-sm">
+              <td className="px-2 md:px-4 py-2 md:py-4 text-slate-800">Total</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-indigo-700">{data.reduce((sum, row) => sum + row.total, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-slate-800">{data.reduce((sum, row) => sum + row.totalPeople, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-amber-700">{data.reduce((sum, row) => sum + row.pending, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-emerald-700">{data.reduce((sum, row) => sum + row.verified, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-teal-700">{data.reduce((sum, row) => sum + row.rescued, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-rose-700">{data.reduce((sum, row) => sum + row.cannotContact, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-orange-700">{data.reduce((sum, row) => sum + row.missing, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-red-700">{data.reduce((sum, row) => sum + row.critical, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-orange-600">{data.reduce((sum, row) => sum + row.high, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-yellow-600">{data.reduce((sum, row) => sum + row.medium, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-green-600">{data.reduce((sum, row) => sum + row.low, 0).toLocaleString()}</td>
             </tr>
           </tfoot>
         </table>
@@ -274,19 +274,19 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
   }, [data, sortConfig]);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+    <div className="bg-white rounded-xl md:rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+      <div className="px-3 md:px-6 py-2 md:py-4 border-b border-slate-100 bg-slate-50/50">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-slate-800 uppercase tracking-wide">
-            Emergency Types by District
+          <h3 className="text-xs md:text-base font-semibold text-slate-800 uppercase tracking-wide">
+            Emergency Types
           </h3>
-          <div className="text-xs text-slate-500">
-            Click column headers to sort
+          <div className="text-[10px] md:text-xs text-slate-500 hidden sm:block">
+            Tap to sort
           </div>
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full text-xs md:text-sm">
           <thead className="bg-slate-50/80 border-b border-slate-200">
             <tr>
               <SortableHeader label="District" sortKey="district" currentSort={sortConfig} onSort={handleSort} align="left" />
@@ -304,34 +304,34 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
                 key={row.district}
                 className={`hover:bg-purple-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}
               >
-                <td className="px-4 py-3.5 font-medium text-slate-800">{row.district}</td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-red-50 border border-red-200 text-red-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 font-medium text-slate-800 whitespace-nowrap">{row.district}</td>
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-red-50 border border-red-200 text-red-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.trapped}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-orange-50 border border-orange-200 text-orange-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-orange-50 border border-orange-200 text-orange-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.foodWater}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-cyan-50 border border-cyan-200 text-cyan-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-cyan-50 border border-cyan-200 text-cyan-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.medical}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-purple-50 border border-purple-200 text-purple-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.rescueAssistance}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-pink-50 border border-pink-200 text-pink-700 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-pink-50 border border-pink-200 text-pink-700 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.missingPerson}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[2.5rem] px-2.5 py-1 bg-slate-100 border border-slate-200 text-slate-600 rounded-full text-xs font-semibold">
+                <td className="px-2 md:px-4 py-2 md:py-3.5 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[1.5rem] md:min-w-[2.5rem] px-1 md:px-2.5 py-0.5 md:py-1 bg-slate-100 border border-slate-200 text-slate-600 rounded-full text-[10px] md:text-xs font-semibold">
                     {row.other}
                   </span>
                 </td>
@@ -339,14 +339,14 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
             ))}
           </tbody>
           <tfoot className="bg-gradient-to-r from-slate-100 to-slate-50 border-t-2 border-slate-200">
-            <tr className="font-bold">
-              <td className="px-4 py-4 text-slate-800">Total</td>
-              <td className="px-4 py-4 text-right text-red-700">{data.reduce((sum, row) => sum + row.trapped, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-orange-700">{data.reduce((sum, row) => sum + row.foodWater, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-cyan-700">{data.reduce((sum, row) => sum + row.medical, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-purple-700">{data.reduce((sum, row) => sum + row.rescueAssistance, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-pink-700">{data.reduce((sum, row) => sum + row.missingPerson, 0).toLocaleString()}</td>
-              <td className="px-4 py-4 text-right text-slate-600">{data.reduce((sum, row) => sum + row.other, 0).toLocaleString()}</td>
+            <tr className="font-bold text-[10px] md:text-sm">
+              <td className="px-2 md:px-4 py-2 md:py-4 text-slate-800">Total</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-red-700">{data.reduce((sum, row) => sum + row.trapped, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-orange-700">{data.reduce((sum, row) => sum + row.foodWater, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-cyan-700">{data.reduce((sum, row) => sum + row.medical, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-purple-700">{data.reduce((sum, row) => sum + row.rescueAssistance, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-pink-700">{data.reduce((sum, row) => sum + row.missingPerson, 0).toLocaleString()}</td>
+              <td className="px-2 md:px-4 py-2 md:py-4 text-right text-slate-600">{data.reduce((sum, row) => sum + row.other, 0).toLocaleString()}</td>
             </tr>
           </tfoot>
         </table>

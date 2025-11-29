@@ -87,27 +87,27 @@ export function StatusByDistrictChart({ data, topN = 10 }: StatusByDistrictChart
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
           Status by District
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
       
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2 mb-2 md:mb-3">
             {allStatuses.map(status => (
               <button
                 key={status}
                 onClick={() => toggleStatus(status)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                   selectedStatuses.includes(status)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
@@ -119,11 +119,11 @@ export function StatusByDistrictChart({ data, topN = 10 }: StatusByDistrictChart
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-600">Show top:</label>
+            <label className="text-[10px] md:text-xs text-slate-600">Top:</label>
             <select 
               value={limit} 
               onChange={(e) => setLimit(Number(e.target.value))}
-              className="px-2 py-1 text-xs border border-slate-300 rounded"
+              className="px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs border border-slate-300 rounded"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -134,34 +134,36 @@ export function StatusByDistrictChart({ data, topN = 10 }: StatusByDistrictChart
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis
-            dataKey="name"
-            angle={-45}
-            textAnchor="end"
-            interval={0}
-            fontSize={11}
-            tick={{ fill: '#64748b' }}
-          />
-          <YAxis tick={{ fill: '#64748b' }} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
-          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
-          {selectedStatuses.includes('Pending') && <Bar dataKey="Pending" stackId="a" fill={STATUS_COLORS.pending} />}
-          {selectedStatuses.includes('Verified') && <Bar dataKey="Verified" stackId="a" fill={STATUS_COLORS.verified} />}
-          {selectedStatuses.includes('Rescued') && <Bar dataKey="Rescued" stackId="a" fill={STATUS_COLORS.rescued} />}
-          {selectedStatuses.includes('Cannot Contact') && <Bar dataKey="Cannot Contact" stackId="a" fill={STATUS_COLORS.cannotContact} />}
-          {selectedStatuses.includes('Completed') && <Bar dataKey="Completed" stackId="a" fill={STATUS_COLORS.completed} />}
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 60 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis
+              dataKey="name"
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              fontSize={9}
+              tick={{ fill: '#64748b' }}
+            />
+            <YAxis tick={{ fill: '#64748b' }} />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
+            {selectedStatuses.includes('Pending') && <Bar dataKey="Pending" stackId="a" fill={STATUS_COLORS.pending} />}
+            {selectedStatuses.includes('Verified') && <Bar dataKey="Verified" stackId="a" fill={STATUS_COLORS.verified} />}
+            {selectedStatuses.includes('Rescued') && <Bar dataKey="Rescued" stackId="a" fill={STATUS_COLORS.rescued} />}
+            {selectedStatuses.includes('Cannot Contact') && <Bar dataKey="Cannot Contact" stackId="a" fill={STATUS_COLORS.cannotContact} />}
+            {selectedStatuses.includes('Completed') && <Bar dataKey="Completed" stackId="a" fill={STATUS_COLORS.completed} />}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -190,27 +192,27 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
           Priority by District
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2 mb-2 md:mb-3">
             {allPriorities.map(priority => (
               <button
                 key={priority}
                 onClick={() => togglePriority(priority)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                   selectedPriorities.includes(priority)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
@@ -222,11 +224,11 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-600">Show top:</label>
+            <label className="text-[10px] md:text-xs text-slate-600">Top:</label>
             <select 
               value={limit} 
               onChange={(e) => setLimit(Number(e.target.value))}
-              className="px-2 py-1 text-xs border border-slate-300 rounded"
+              className="px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs border border-slate-300 rounded"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -237,33 +239,35 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis
-            dataKey="name"
-            angle={-45}
-            textAnchor="end"
-            interval={0}
-            fontSize={11}
-            tick={{ fill: '#64748b' }}
-          />
-          <YAxis tick={{ fill: '#64748b' }} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
-          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
-          {selectedPriorities.includes('Critical') && <Bar dataKey="Critical" fill={PRIORITY_COLORS.critical} />}
-          {selectedPriorities.includes('High') && <Bar dataKey="High" fill={PRIORITY_COLORS.high} />}
-          {selectedPriorities.includes('Medium') && <Bar dataKey="Medium" fill={PRIORITY_COLORS.medium} />}
-          {selectedPriorities.includes('Low') && <Bar dataKey="Low" fill={PRIORITY_COLORS.low} />}
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 60 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis
+              dataKey="name"
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              fontSize={9}
+              tick={{ fill: '#64748b' }}
+            />
+            <YAxis tick={{ fill: '#64748b' }} />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
+            {selectedPriorities.includes('Critical') && <Bar dataKey="Critical" fill={PRIORITY_COLORS.critical} />}
+            {selectedPriorities.includes('High') && <Bar dataKey="High" fill={PRIORITY_COLORS.high} />}
+            {selectedPriorities.includes('Medium') && <Bar dataKey="Medium" fill={PRIORITY_COLORS.medium} />}
+            {selectedPriorities.includes('Low') && <Bar dataKey="Low" fill={PRIORITY_COLORS.low} />}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -302,27 +306,27 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
-          Emergency Types Distribution
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
+          Emergency Types
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2">
             {allTypes.map((type, index) => (
               <button
                 key={type}
                 onClick={() => toggleType(type)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                   selectedTypes.includes(type)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
@@ -336,33 +340,35 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="40%"
-            labelLine={false}
-            label={renderLabel}
-            outerRadius={85}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
-          <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="h-[280px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="45%"
+              labelLine={false}
+              label={renderLabel}
+              outerRadius={70}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
+            <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -400,27 +406,27 @@ export function PriorityPieChart({ data }: ChartsProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
           Priority Distribution
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2">
             {allPriorities.map((priority, index) => (
               <button
                 key={priority}
                 onClick={() => togglePriority(priority)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                   selectedPriorities.includes(priority)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
@@ -434,33 +440,35 @@ export function PriorityPieChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="40%"
-            labelLine={false}
-            label={renderLabel}
-            outerRadius={85}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
-          <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="h-[280px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="45%"
+              labelLine={false}
+              label={renderLabel}
+              outerRadius={70}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
+            <Legend verticalAlign="bottom" wrapperStyle={{ paddingTop: '20px' }} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -478,45 +486,45 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
-          People Affected by District
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
+          People by District
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2 mb-3">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2 mb-2 md:mb-3">
             <button
               onClick={() => setShowPeople(!showPeople)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                 showPeople ? 'bg-blue-500 text-white' : 'bg-white border border-slate-300 text-slate-600'
               }`}
             >
-              Total People
+              People
             </button>
             <button
               onClick={() => setShowCases(!showCases)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                 showCases ? 'bg-emerald-500 text-white' : 'bg-white border border-slate-300 text-slate-600'
               }`}
             >
-              Total Cases
+              Cases
             </button>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-600">Show top:</label>
+            <label className="text-[10px] md:text-xs text-slate-600">Top:</label>
             <select 
               value={limit} 
               onChange={(e) => setLimit(Number(e.target.value))}
-              className="px-2 py-1 text-xs border border-slate-300 rounded"
+              className="px-1.5 md:px-2 py-0.5 md:py-1 text-[10px] md:text-xs border border-slate-300 rounded"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -528,31 +536,33 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={400}>
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis
-            dataKey="name"
-            angle={-45}
-            textAnchor="end"
-            interval={0}
-            fontSize={11}
-            tick={{ fill: '#64748b' }}
-          />
-          <YAxis tick={{ fill: '#64748b' }} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
-          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
-          {showPeople && <Bar dataKey="Total People" fill="#3b82f6" />}
-          {showCases && <Bar dataKey="Total Cases" fill="#10b981" />}
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="h-[300px] md:h-[400px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 60 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis
+              dataKey="name"
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              fontSize={9}
+              tick={{ fill: '#64748b' }}
+            />
+            <YAxis tick={{ fill: '#64748b' }} />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: '20px' }} />
+            {showPeople && <Bar dataKey="Total People" fill="#3b82f6" />}
+            {showCases && <Bar dataKey="Total Cases" fill="#10b981" />}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -592,27 +602,27 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
 
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
+      <div className="flex items-center justify-between mb-2 md:mb-4">
+        <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
           Vulnerable Groups
         </h3>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <div className="flex flex-wrap gap-1.5 md:gap-2">
             {allGroups.map((group, index) => (
               <button
                 key={group}
                 onClick={() => toggleGroup(group)}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium transition-colors ${
                   selectedGroups.includes(group)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
@@ -626,28 +636,36 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={chartData} layout="vertical" margin={{ top: 20, right: 30, left: 120, bottom: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis type="number" tick={{ fill: '#64748b' }} />
-          <YAxis dataKey="name" type="category" tick={{ fill: '#64748b' }} width={110} />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#fff', 
-              border: '1px solid #e2e8f0',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-            }} 
-          />
+      <div className="h-[200px] md:h-[320px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 10, left: 5, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis type="number" tick={{ fill: '#64748b', fontSize: 10 }} />
+            <YAxis 
+              dataKey="name" 
+              type="category" 
+              tick={{ fill: '#64748b', fontSize: 9 }} 
+              width={80}
+              tickFormatter={(value) => value.length > 10 ? value.slice(0, 10) + '...' : value}
+            />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: '#fff', 
+                border: '1px solid #e2e8f0',
+                borderRadius: '6px',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+              }} 
+            />
 
-          <Bar dataKey="value">
+            <Bar dataKey="value">
 
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.fill} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.fill} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -775,130 +793,137 @@ export function DistrictImpactBubbleChart({ records }: BubbleChartProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-6 lg:col-span-2">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6 lg:col-span-2">
       <div className="flex items-center justify-between mb-2">
-        <div>
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-xs md:text-sm font-semibold text-slate-700 uppercase tracking-wide">
             District Impact Clusters
           </h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Comparing <span className="text-blue-600 font-medium">Districts</span> (X-Axis) vs{' '}
-            <span className="text-purple-600 font-medium">Emergency Types</span> (Y-Axis).
-            Bubble size = Number of people affected.
+          <p className="text-[10px] md:text-xs text-slate-500 mt-0.5 md:mt-1 hidden sm:block">
+            <span className="text-blue-600 font-medium">Districts</span> vs{' '}
+            <span className="text-purple-600 font-medium">Emergency Types</span>.
+            Bubble size = People affected.
           </p>
         </div>
         <button 
           onClick={() => setShowFilter(!showFilter)}
-          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+          className={`p-1.5 md:p-2 rounded-lg border transition-colors flex-shrink-0 ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
         >
-          <Filter size={16} className="text-slate-600" />
+          <Filter size={14} className="md:w-4 md:h-4 text-slate-600" />
         </button>
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
-          <p className="text-xs text-slate-600 mb-2">Filter by Emergency Type:</p>
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-3 md:mb-4 p-2 md:p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <p className="text-[10px] md:text-xs text-slate-600 mb-1.5 md:mb-2">Filter by Type:</p>
+          <div className="flex flex-wrap gap-1 md:gap-2">
             {emergencyTypes.map(type => (
               <button
                 key={type}
                 onClick={() => toggleType(type)}
-                className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded text-[9px] md:text-xs font-medium transition-colors ${
                   selectedTypes.includes(type)
                     ? 'text-white'
                     : 'bg-white border border-slate-300 text-slate-600'
                 }`}
                 style={selectedTypes.includes(type) ? { backgroundColor: BUBBLE_COLORS[type] || '#64748b' } : {}}
               >
-                {type.replace(/_/g, ' ')}
+                {type.replace(/_/g, ' ').slice(0, 12)}
               </button>
             ))}
           </div>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-1.5 md:mt-2 flex gap-2">
             <button
               onClick={() => setSelectedTypes(emergencyTypes)}
-              className="text-xs text-blue-600 hover:underline"
+              className="text-[10px] md:text-xs text-blue-600 hover:underline"
             >
-              Select All
+              All
             </button>
             <button
               onClick={() => setSelectedTypes([])}
-              className="text-xs text-red-600 hover:underline"
+              className="text-[10px] md:text-xs text-red-600 hover:underline"
             >
-              Clear All
+              Clear
             </button>
           </div>
         </div>
       )}
 
-      <ResponsiveContainer width="100%" height={450}>
-        <ScatterChart margin={{ top: 20, right: 20, bottom: 10, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis 
-            type="number" 
-            dataKey="x" 
-            domain={[-0.5, districts.length - 0.5]}
-            ticks={districts.map((_, i) => i)}
-            tickFormatter={(value) => {
-              const district = districts[value];
-              return district ? (district.length > 10 ? district.slice(0, 10) + '...' : district) : '';
-            }}
-            angle={-45}
-            textAnchor="end"
-            interval={0}
-            fontSize={10}
-            tick={{ fill: '#64748b' }}
-            height={80}
-          />
-          <YAxis 
-            type="number" 
-            dataKey="y"
-            domain={[-0.5, emergencyTypes.length - 0.5]}
-            ticks={emergencyTypes.map((_, i) => i)}
-            tickFormatter={(value) => {
-              const type = emergencyTypes[value];
-              if (!type) return '';
-              const formatted = type.replace(/_/g, ' ');
-              return formatted.length > 18 ? formatted.slice(0, 18) + '...' : formatted;
-            }}
-            fontSize={9}
-            tick={{ fill: '#475569' }}
-            width={130}
-          />
-          <ZAxis type="number" dataKey="z" range={[20, 800]} />
-          <Tooltip content={<CustomTooltip />} />
-          <Scatter 
-            data={filteredData} 
-            fill="#8884d8"
-          >
-            {filteredData.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color}
-                fillOpacity={0.7}
-                stroke={entry.color}
-                strokeWidth={1}
-              />
-            ))}
-          </Scatter>
-        </ScatterChart>
-      </ResponsiveContainer>
+      <div className="h-[280px] md:h-[450px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <ScatterChart margin={{ top: 10, right: 5, bottom: 5, left: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis 
+              type="number" 
+              dataKey="x" 
+              domain={[-0.5, districts.length - 0.5]}
+              ticks={districts.map((_, i) => i)}
+              tickFormatter={(value) => {
+                const district = districts[value];
+                if (!district) return '';
+                // Shorter labels on mobile
+                const maxLen = typeof window !== 'undefined' && window.innerWidth < 768 ? 6 : 10;
+                return district.length > maxLen ? district.slice(0, maxLen) + '..' : district;
+              }}
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              fontSize={8}
+              tick={{ fill: '#64748b' }}
+              height={50}
+            />
+            <YAxis 
+              type="number" 
+              dataKey="y"
+              domain={[-0.5, emergencyTypes.length - 0.5]}
+              ticks={emergencyTypes.map((_, i) => i)}
+              tickFormatter={(value) => {
+                const type = emergencyTypes[value];
+                if (!type) return '';
+                const formatted = type.replace(/_/g, ' ');
+                // Shorter labels on mobile
+                const maxLen = typeof window !== 'undefined' && window.innerWidth < 768 ? 8 : 18;
+                return formatted.length > maxLen ? formatted.slice(0, maxLen) + '..' : formatted;
+              }}
+              fontSize={8}
+              tick={{ fill: '#475569' }}
+              width={60}
+            />
+            <ZAxis type="number" dataKey="z" range={[20, 800]} />
+            <Tooltip content={<CustomTooltip />} />
+            <Scatter 
+              data={filteredData} 
+              fill="#8884d8"
+            >
+              {filteredData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.color}
+                  fillOpacity={0.7}
+                  stroke={entry.color}
+                  strokeWidth={1}
+                />
+              ))}
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
 
-      {/* Legend */}
-      <div className="mt-2 pt-2 border-t border-slate-200">
-        <p className="text-xs text-slate-500 mb-1">Emergency Types:</p>
-        <div className="flex flex-wrap gap-2">
-          {emergencyTypes.slice(0, 10).map(type => (
-            <div key={type} className="flex items-center gap-1.5">
+      {/* Legend - Hidden on mobile, shown on tablet+ */}
+      <div className="mt-2 pt-2 border-t border-slate-200 hidden sm:block">
+        <p className="text-[10px] md:text-xs text-slate-500 mb-1">Emergency Types:</p>
+        <div className="flex flex-wrap gap-1.5 md:gap-2">
+          {emergencyTypes.slice(0, 8).map(type => (
+            <div key={type} className="flex items-center gap-1">
               <div 
-                className="w-3 h-3 rounded-full"
+                className="w-2 h-2 md:w-3 md:h-3 rounded-full"
                 style={{ backgroundColor: BUBBLE_COLORS[type] || '#64748b' }}
               />
-              <span className="text-xs text-slate-600">{type.replace(/_/g, ' ')}</span>
+              <span className="text-[10px] md:text-xs text-slate-600">{type.replace(/_/g, ' ').slice(0, 12)}</span>
             </div>
           ))}
-          {emergencyTypes.length > 10 && (
-            <span className="text-xs text-slate-400">+{emergencyTypes.length - 10} more</span>
+          {emergencyTypes.length > 8 && (
+            <span className="text-[10px] md:text-xs text-slate-400">+{emergencyTypes.length - 8} more</span>
           )}
         </div>
       </div>
