@@ -15,30 +15,29 @@ import {
   Cell,
 } from 'recharts';
 
+// Professional muted color palette
 const STATUS_COLORS = {
-  pending: '#f59e0b',
-  verified: '#10b981',
-  rescued: '#3b82f6',
-  cannotContact: '#ef4444',
-  completed: '#6366f1',
-  acknowledged: '#8b5cf6',
-  inProgress: '#06b6d4',
+  pending: '#94a3b8',
+  verified: '#64748b',
+  rescued: '#475569',
+  cannotContact: '#cbd5e1',
+  completed: '#334155',
 };
 
 const PRIORITY_COLORS = {
-  critical: '#dc2626',
-  high: '#f97316',
-  medium: '#eab308',
-  low: '#22c55e',
+  critical: '#64748b',
+  high: '#94a3b8',
+  medium: '#cbd5e1',
+  low: '#e2e8f0',
 };
 
 const EMERGENCY_COLORS = [
-  '#ef4444',
-  '#f97316',
-  '#eab308',
-  '#22c55e',
-  '#06b6d4',
-  '#8b5cf6',
+  '#334155',
+  '#475569',
+  '#64748b',
+  '#94a3b8',
+  '#cbd5e1',
+  '#e2e8f0',
 ];
 
 interface ChartsProps {
@@ -56,22 +55,30 @@ export function StatusByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
         Status by District (Top 10)
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={350}>
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
             angle={-45}
             textAnchor="end"
             interval={0}
-            fontSize={12}
+            fontSize={11}
+            tick={{ fill: '#64748b' }}
           />
-          <YAxis />
-          <Tooltip />
+          <YAxis tick={{ fill: '#64748b' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#fff', 
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+            }} 
+          />
           <Legend />
           <Bar dataKey="Pending" stackId="a" fill={STATUS_COLORS.pending} />
           <Bar dataKey="Verified" stackId="a" fill={STATUS_COLORS.verified} />
@@ -94,22 +101,30 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
         Priority by District (Top 10)
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={350}>
         <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="name"
             angle={-45}
             textAnchor="end"
             interval={0}
-            fontSize={12}
+            fontSize={11}
+            tick={{ fill: '#64748b' }}
           />
-          <YAxis />
-          <Tooltip />
+          <YAxis tick={{ fill: '#64748b' }} />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#fff', 
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+            }} 
+          />
           <Legend />
           <Bar dataKey="Critical" fill={PRIORITY_COLORS.critical} />
           <Bar dataKey="High" fill={PRIORITY_COLORS.high} />
@@ -139,19 +154,19 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
     .filter((d) => d.value > 0);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
         Emergency Types Distribution
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={350}>
         <PieChart>
           <Pie
             data={pieData}
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-            outerRadius={120}
+            label={({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`}
+            outerRadius={110}
             fill="#8884d8"
             dataKey="value"
           >
@@ -159,7 +174,14 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
               <Cell key={`cell-${index}`} fill={EMERGENCY_COLORS[index % EMERGENCY_COLORS.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#fff', 
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+            }} 
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -184,19 +206,19 @@ export function PriorityPieChart({ data }: ChartsProps) {
   const colors = [PRIORITY_COLORS.critical, PRIORITY_COLORS.high, PRIORITY_COLORS.medium, PRIORITY_COLORS.low];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
         Priority Distribution
       </h3>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={350}>
         <PieChart>
           <Pie
             data={pieData}
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-            outerRadius={120}
+            label={({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`}
+            outerRadius={110}
             fill="#8884d8"
             dataKey="value"
           >
@@ -204,7 +226,14 @@ export function PriorityPieChart({ data }: ChartsProps) {
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip 
+            contentStyle={{ 
+              backgroundColor: '#fff', 
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+            }} 
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

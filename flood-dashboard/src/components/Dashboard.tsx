@@ -34,14 +34,14 @@ export function StatsCards({
   verified,
 }: StatsCardsProps) {
   const cards = [
-    { label: 'Total Cases', value: totalCases, color: 'bg-blue-500', Icon: ClipboardList },
-    { label: 'People Affected', value: totalPeople, color: 'bg-purple-500', Icon: Users },
-    { label: 'Critical', value: critical, color: 'bg-red-600', Icon: AlertCircle },
-    { label: 'Pending', value: pending, color: 'bg-amber-500', Icon: Clock },
-    { label: 'Verified', value: verified, color: 'bg-emerald-500', Icon: CheckCircle },
-    { label: 'Rescued', value: rescued, color: 'bg-green-500', Icon: LifeBuoy },
-    { label: 'Missing', value: missing, color: 'bg-orange-500', Icon: Search },
-    { label: 'Cannot Contact', value: cannotContact, color: 'bg-rose-500', Icon: PhoneOff },
+    { label: 'Total Cases', value: totalCases, borderColor: 'border-slate-400', textColor: 'text-slate-600', Icon: ClipboardList },
+    { label: 'People Affected', value: totalPeople, borderColor: 'border-slate-400', textColor: 'text-slate-600', Icon: Users },
+    { label: 'Critical', value: critical, borderColor: 'border-red-400', textColor: 'text-red-600', Icon: AlertCircle },
+    { label: 'Pending', value: pending, borderColor: 'border-amber-400', textColor: 'text-amber-600', Icon: Clock },
+    { label: 'Verified', value: verified, borderColor: 'border-emerald-400', textColor: 'text-emerald-600', Icon: CheckCircle },
+    { label: 'Rescued', value: rescued, borderColor: 'border-blue-400', textColor: 'text-blue-600', Icon: LifeBuoy },
+    { label: 'Missing', value: missing, borderColor: 'border-orange-400', textColor: 'text-orange-600', Icon: Search },
+    { label: 'Cannot Contact', value: cannotContact, borderColor: 'border-rose-400', textColor: 'text-rose-600', Icon: PhoneOff },
   ];
 
   return (
@@ -49,11 +49,13 @@ export function StatsCards({
       {cards.map((card) => (
         <div
           key={card.label}
-          className={`${card.color} rounded-xl p-4 text-white shadow-lg transform hover:scale-105 transition-transform`}
+          className={`bg-white rounded-lg p-4 border-l-4 ${card.borderColor} shadow-sm hover:shadow-md transition-shadow`}
         >
-          <card.Icon size={24} className="mb-1" />
-          <div className="text-2xl font-bold">{card.value.toLocaleString()}</div>
-          <div className="text-sm opacity-90">{card.label}</div>
+          <div className="flex items-center justify-between mb-2">
+            <card.Icon size={18} className={card.textColor} />
+          </div>
+          <div className="text-2xl font-semibold text-slate-800">{card.value.toLocaleString()}</div>
+          <div className="text-xs text-slate-500 mt-1">{card.label}</div>
         </div>
       ))}
     </div>
@@ -66,70 +68,72 @@ interface DistrictTableProps {
 
 export function DistrictTable({ data }: DistrictTableProps) {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+      <div className="px-6 py-4 border-b border-slate-200">
+        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
           District-wise Summary
         </h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">District</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Total</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">People</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Pending</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Verified</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Rescued</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">No Contact</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600">Missing</th>
-              <th className="px-4 py-3 text-right font-semibold text-red-600">Critical</th>
-              <th className="px-4 py-3 text-right font-semibold text-orange-500">High</th>
-              <th className="px-4 py-3 text-right font-semibold text-yellow-600">Medium</th>
-              <th className="px-4 py-3 text-right font-semibold text-green-600">Low</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">District</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Total</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">People</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Pending</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Verified</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Rescued</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">No Contact</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Missing</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Critical</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">High</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Medium</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Low</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-slate-100">
             {data.map((row, index) => (
               <tr
                 key={row.district}
-                className={`hover:bg-gray-50 ${
-                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                }`}
+                className="hover:bg-slate-50 transition-colors"
               >
-                <td className="px-4 py-3 font-medium text-gray-800">{row.district}</td>
-                <td className="px-4 py-3 text-right text-gray-600">{row.total}</td>
-                <td className="px-4 py-3 text-right text-gray-600">{row.totalPeople.toLocaleString()}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{row.district}</td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.total}</td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.totalPeople.toLocaleString()}</td>
                 <td className="px-4 py-3 text-right">
-                  <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-amber-300 text-amber-700 rounded text-xs font-medium">
                     {row.pending}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <span className="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-medium">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-emerald-300 text-emerald-700 rounded text-xs font-medium">
                     {row.verified}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-blue-300 text-blue-700 rounded text-xs font-medium">
                     {row.rescued}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <span className="px-2 py-1 bg-rose-100 text-rose-800 rounded-full text-xs font-medium">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-rose-300 text-rose-700 rounded text-xs font-medium">
                     {row.cannotContact}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-orange-300 text-orange-700 rounded text-xs font-medium">
                     {row.missing}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-right font-bold text-red-600">{row.critical}</td>
-                <td className="px-4 py-3 text-right font-bold text-orange-500">{row.high}</td>
-                <td className="px-4 py-3 text-right text-yellow-600">{row.medium}</td>
-                <td className="px-4 py-3 text-right text-green-600">{row.low}</td>
+                <td className="px-4 py-3 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-red-400 text-red-700 rounded text-xs font-semibold">
+                    {row.critical}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.high}</td>
+                <td className="px-4 py-3 text-right text-slate-500">{row.medium}</td>
+                <td className="px-4 py-3 text-right text-slate-400">{row.low}</td>
               </tr>
             ))}
           </tbody>
@@ -145,40 +149,46 @@ interface EmergencyTypeTableProps {
 
 export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800">
+    <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
+      <div className="px-6 py-4 border-b border-slate-200">
+        <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
           Emergency Types by District
         </h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600">District</th>
-              <th className="px-4 py-3 text-right font-semibold text-red-600">Trapped</th>
-              <th className="px-4 py-3 text-right font-semibold text-orange-500">Food/Water</th>
-              <th className="px-4 py-3 text-right font-semibold text-purple-600">Medical</th>
-              <th className="px-4 py-3 text-right font-semibold text-blue-600">Rescue</th>
-              <th className="px-4 py-3 text-right font-semibold text-yellow-600">Missing</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-500">Other</th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">District</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Trapped</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Food/Water</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Medical</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Rescue</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Missing</th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">Other</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-slate-100">
             {data.map((row, index) => (
               <tr
                 key={row.district}
-                className={`hover:bg-gray-50 ${
-                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                }`}
+                className="hover:bg-slate-50 transition-colors"
               >
-                <td className="px-4 py-3 font-medium text-gray-800">{row.district}</td>
-                <td className="px-4 py-3 text-right font-bold text-red-600">{row.trapped}</td>
-                <td className="px-4 py-3 text-right font-bold text-orange-500">{row.foodWater}</td>
-                <td className="px-4 py-3 text-right text-purple-600">{row.medical}</td>
-                <td className="px-4 py-3 text-right text-blue-600">{row.rescueAssistance}</td>
-                <td className="px-4 py-3 text-right text-yellow-600">{row.missingPerson}</td>
-                <td className="px-4 py-3 text-right text-gray-500">{row.other}</td>
+                <td className="px-4 py-3 font-medium text-slate-800">{row.district}</td>
+                <td className="px-4 py-3 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-red-300 text-red-700 rounded text-xs font-medium">
+                    {row.trapped}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 border border-orange-300 text-orange-700 rounded text-xs font-medium">
+                    {row.foodWater}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.medical}</td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.rescueAssistance}</td>
+                <td className="px-4 py-3 text-right text-slate-600">{row.missingPerson}</td>
+                <td className="px-4 py-3 text-right text-slate-400">{row.other}</td>
               </tr>
             ))}
           </tbody>
