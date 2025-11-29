@@ -12,6 +12,7 @@ import {
   PriorityPieChart,
   PeopleByDistrictChart,
   VulnerableGroupsChart,
+  DistrictImpactBubbleChart,
 } from '@/components/Charts';
 
 interface FetchResponse {
@@ -769,6 +770,11 @@ export default function Home() {
                   <PriorityPieChart data={filteredSummary} />
                   <PeopleByDistrictChart data={filteredSummary} />
                   <VulnerableGroupsChart data={filteredSummary} />
+                </div>
+
+                {/* Bubble Chart - Above Tables */}
+                <div className="mb-8">
+                  <DistrictImpactBubbleChart records={filteredRecords} />
                 </div>
 
                 {/* Tables */}

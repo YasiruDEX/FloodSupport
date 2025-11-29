@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { DistrictSummary } from '@/types';
+import { useState, useMemo } from 'react';
+import { DistrictSummary, SOSRecord } from '@/types';
 import {
   BarChart,
   Bar,
@@ -14,6 +14,9 @@ import {
   PieChart,
   Pie,
   Cell,
+  ScatterChart,
+  Scatter,
+  ZAxis,
 } from 'recharts';
 import { Filter } from 'lucide-react';
 
@@ -645,6 +648,260 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
+    </div>
+  );
+}
+
+// Bubble chart color palette for emergency types
+const BUBBLE_COLORS: Record<string, string> = {
+  TRAPPED: '#8b5cf6',           // violet
+  SHELTER_NEEDED: '#ef4444',    // red
+  SHELTER_H: '#f97316',         // orange
+  DRY_MATERIALS_H: '#eab308',   // yellow
+  RESCUE_NEEDED: '#22c55e',     // green
+  MEDICAL_ASSISTANCE_H: '#3b82f6', // blue
+  OTHER: '#06b6d4',             // cyan
+  MISSING_PERSON: '#ec4899',    // pink
+  MEDICAL: '#14b8a6',           // teal
+  FOOD_WATER: '#6366f1',        // indigo
+  DRY_FOOD_H: '#f43f5e',        // rose
+  DRINKING_WATER_H: '#a855f7',  // purple
+  COOKED_FOOD_H: '#84cc16',     // lime
+};
+
+interface BubbleChartProps {
+  records: SOSRecord[];
+}
+
+interface BubbleDataPoint {
+  district: string;
+  emergencyType: string;
+  x: number;
+  y: number;
+  z: number;
+  people: number;
+  requests: number;
+  color: string;
+}
+
+export function DistrictImpactBubbleChart({ records }: BubbleChartProps) {
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
+  // Process records to create bubble data
+  const { bubbleData, districts, emergencyTypes } = useMemo(() => {
+    // Group records by district and emergency type
+    const grouped: Record<string, Record<string, { people: number; requests: number }>> = {};
+    const districtSet = new Set<string>();
+    const typeSet = new Set<string>();
+
+    records.forEach(record => {
+      if (!record.district || !record.emergencyType) return;
+      
+      districtSet.add(record.district);
+      typeSet.add(record.emergencyType);
+      
+      if (!grouped[record.district]) {
+        grouped[record.district] = {};
+      }
+      if (!grouped[record.district][record.emergencyType]) {
+        grouped[record.district][record.emergencyType] = { people: 0, requests: 0 };
+      }
+      
+      grouped[record.district][record.emergencyType].people += record.numberOfPeople || 0;
+      grouped[record.district][record.emergencyType].requests += 1;
+    });
+
+    const districts = Array.from(districtSet).sort();
+    const emergencyTypes = Array.from(typeSet).sort();
+
+    // Create bubble data points
+    const data: BubbleDataPoint[] = [];
+    
+    districts.forEach((district, districtIndex) => {
+      emergencyTypes.forEach((type, typeIndex) => {
+        const stats = grouped[district]?.[type];
+        if (stats && stats.requests > 0) {
+          data.push({
+            district,
+            emergencyType: type,
+            x: districtIndex,
+            y: typeIndex,
+            z: Math.sqrt(stats.people) * 3, // Scale bubble size
+            people: stats.people,
+            requests: stats.requests,
+            color: BUBBLE_COLORS[type] || '#64748b',
+          });
+        }
+      });
+    });
+
+    return { bubbleData: data, districts, emergencyTypes };
+  }, [records]);
+
+  // Initialize selected types with all types
+  useMemo(() => {
+    if (selectedTypes.length === 0 && emergencyTypes.length > 0) {
+      setSelectedTypes(emergencyTypes);
+    }
+  }, [emergencyTypes, selectedTypes.length]);
+
+  const filteredData = useMemo(() => {
+    if (selectedTypes.length === 0) return bubbleData;
+    return bubbleData.filter(d => selectedTypes.includes(d.emergencyType));
+  }, [bubbleData, selectedTypes]);
+
+  const toggleType = (type: string) => {
+    setSelectedTypes(prev => 
+      prev.includes(type) 
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: BubbleDataPoint }> }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-3 rounded-lg shadow-lg border border-slate-200">
+          <p className="font-semibold text-slate-800">{data.district}</p>
+          <p className="text-sm text-slate-600">Type: {data.emergencyType.replace(/_/g, ' ')}</p>
+          <p className="text-sm text-blue-600">People: {data.people.toLocaleString()}</p>
+          <p className="text-sm text-emerald-600">Requests: {data.requests}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="bg-white rounded-lg border border-slate-200 p-6 lg:col-span-2">
+      <div className="flex items-center justify-between mb-2">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+            District Impact Clusters
+          </h3>
+          <p className="text-xs text-slate-500 mt-1">
+            Comparing <span className="text-blue-600 font-medium">Districts</span> (X-Axis) vs{' '}
+            <span className="text-purple-600 font-medium">Emergency Types</span> (Y-Axis).
+            Bubble size = Number of people affected.
+          </p>
+        </div>
+        <button 
+          onClick={() => setShowFilter(!showFilter)}
+          className={`p-2 rounded-lg border transition-colors ${showFilter ? 'bg-slate-100 border-slate-300' : 'border-slate-200 hover:bg-slate-50'}`}
+        >
+          <Filter size={16} className="text-slate-600" />
+        </button>
+      </div>
+
+      {showFilter && (
+        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+          <p className="text-xs text-slate-600 mb-2">Filter by Emergency Type:</p>
+          <div className="flex flex-wrap gap-2">
+            {emergencyTypes.map(type => (
+              <button
+                key={type}
+                onClick={() => toggleType(type)}
+                className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                  selectedTypes.includes(type)
+                    ? 'text-white'
+                    : 'bg-white border border-slate-300 text-slate-600'
+                }`}
+                style={selectedTypes.includes(type) ? { backgroundColor: BUBBLE_COLORS[type] || '#64748b' } : {}}
+              >
+                {type.replace(/_/g, ' ')}
+              </button>
+            ))}
+          </div>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => setSelectedTypes(emergencyTypes)}
+              className="text-xs text-blue-600 hover:underline"
+            >
+              Select All
+            </button>
+            <button
+              onClick={() => setSelectedTypes([])}
+              className="text-xs text-red-600 hover:underline"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+      )}
+
+      <ResponsiveContainer width="100%" height={450}>
+        <ScatterChart margin={{ top: 20, right: 20, bottom: 10, left: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis 
+            type="number" 
+            dataKey="x" 
+            domain={[-0.5, districts.length - 0.5]}
+            ticks={districts.map((_, i) => i)}
+            tickFormatter={(value) => {
+              const district = districts[value];
+              return district ? (district.length > 10 ? district.slice(0, 10) + '...' : district) : '';
+            }}
+            angle={-45}
+            textAnchor="end"
+            interval={0}
+            fontSize={10}
+            tick={{ fill: '#64748b' }}
+            height={80}
+          />
+          <YAxis 
+            type="number" 
+            dataKey="y"
+            domain={[-0.5, emergencyTypes.length - 0.5]}
+            ticks={emergencyTypes.map((_, i) => i)}
+            tickFormatter={(value) => {
+              const type = emergencyTypes[value];
+              if (!type) return '';
+              const formatted = type.replace(/_/g, ' ');
+              return formatted.length > 18 ? formatted.slice(0, 18) + '...' : formatted;
+            }}
+            fontSize={9}
+            tick={{ fill: '#475569' }}
+            width={130}
+          />
+          <ZAxis type="number" dataKey="z" range={[20, 800]} />
+          <Tooltip content={<CustomTooltip />} />
+          <Scatter 
+            data={filteredData} 
+            fill="#8884d8"
+          >
+            {filteredData.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.color}
+                fillOpacity={0.7}
+                stroke={entry.color}
+                strokeWidth={1}
+              />
+            ))}
+          </Scatter>
+        </ScatterChart>
+      </ResponsiveContainer>
+
+      {/* Legend */}
+      <div className="mt-2 pt-2 border-t border-slate-200">
+        <p className="text-xs text-slate-500 mb-1">Emergency Types:</p>
+        <div className="flex flex-wrap gap-2">
+          {emergencyTypes.slice(0, 10).map(type => (
+            <div key={type} className="flex items-center gap-1.5">
+              <div 
+                className="w-3 h-3 rounded-full"
+                style={{ backgroundColor: BUBBLE_COLORS[type] || '#64748b' }}
+              />
+              <span className="text-xs text-slate-600">{type.replace(/_/g, ' ')}</span>
+            </div>
+          ))}
+          {emergencyTypes.length > 10 && (
+            <span className="text-xs text-slate-400">+{emergencyTypes.length - 10} more</span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
