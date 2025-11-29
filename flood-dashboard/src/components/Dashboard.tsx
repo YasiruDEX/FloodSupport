@@ -93,7 +93,7 @@ export function DistrictTable({ data }: DistrictTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {data.map((row, index) => (
+            {data.map((row) => (
               <tr
                 key={row.district}
                 className="hover:bg-slate-50 transition-colors"
@@ -137,6 +137,22 @@ export function DistrictTable({ data }: DistrictTableProps) {
               </tr>
             ))}
           </tbody>
+          <tfoot className="bg-slate-100 border-t-2 border-slate-300">
+            <tr className="font-semibold">
+              <td className="px-4 py-3 text-slate-800">Total</td>
+              <td className="px-4 py-3 text-right text-slate-800">{data.reduce((sum, row) => sum + row.total, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-800">{data.reduce((sum, row) => sum + row.totalPeople, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-amber-700">{data.reduce((sum, row) => sum + row.pending, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-emerald-700">{data.reduce((sum, row) => sum + row.verified, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-blue-700">{data.reduce((sum, row) => sum + row.rescued, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-rose-700">{data.reduce((sum, row) => sum + row.cannotContact, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-orange-700">{data.reduce((sum, row) => sum + row.missing, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-red-700">{data.reduce((sum, row) => sum + row.critical, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-700">{data.reduce((sum, row) => sum + row.high, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-600">{data.reduce((sum, row) => sum + row.medium, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-500">{data.reduce((sum, row) => sum + row.low, 0).toLocaleString()}</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
@@ -169,7 +185,7 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {data.map((row, index) => (
+            {data.map((row) => (
               <tr
                 key={row.district}
                 className="hover:bg-slate-50 transition-colors"
@@ -192,6 +208,17 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
               </tr>
             ))}
           </tbody>
+          <tfoot className="bg-slate-100 border-t-2 border-slate-300">
+            <tr className="font-semibold">
+              <td className="px-4 py-3 text-slate-800">Total</td>
+              <td className="px-4 py-3 text-right text-red-700">{data.reduce((sum, row) => sum + row.trapped, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-orange-700">{data.reduce((sum, row) => sum + row.foodWater, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-700">{data.reduce((sum, row) => sum + row.medical, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-700">{data.reduce((sum, row) => sum + row.rescueAssistance, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-700">{data.reduce((sum, row) => sum + row.missingPerson, 0).toLocaleString()}</td>
+              <td className="px-4 py-3 text-right text-slate-500">{data.reduce((sum, row) => sum + row.other, 0).toLocaleString()}</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>

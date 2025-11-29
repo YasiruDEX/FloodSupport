@@ -153,6 +153,9 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
     .map(([name, value]) => ({ name, value }))
     .filter((d) => d.value > 0);
 
+  const renderLabel = (props: { name?: string; percent?: number }) => 
+    `${props.name ?? ''} (${((props.percent ?? 0) * 100).toFixed(0)}%)`;
+
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-6">
       <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
@@ -165,7 +168,7 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`}
+            label={renderLabel}
             outerRadius={110}
             fill="#8884d8"
             dataKey="value"
@@ -205,6 +208,9 @@ export function PriorityPieChart({ data }: ChartsProps) {
 
   const colors = [PRIORITY_COLORS.critical, PRIORITY_COLORS.high, PRIORITY_COLORS.medium, PRIORITY_COLORS.low];
 
+  const renderLabel = (props: { name?: string; percent?: number }) => 
+    `${props.name ?? ''} (${((props.percent ?? 0) * 100).toFixed(0)}%)`;
+
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-6">
       <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
@@ -217,7 +223,7 @@ export function PriorityPieChart({ data }: ChartsProps) {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={({ name, percent }) => `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`}
+            label={renderLabel}
             outerRadius={110}
             fill="#8884d8"
             dataKey="value"
