@@ -826,7 +826,7 @@ export default function Home() {
       <footer className="bg-white border-t border-slate-200 py-4 mt-8">
         <div className="container mx-auto px-4 text-center">
           <p className="text-slate-500 text-sm">
-            Flood Support Dashboard — Data sourced from floodsupport.org API, developed by{' '}
+            Flood Support Stats — Data sourced from floodsupport.org API, developed by{' '}
             <a 
               href="https://www.linkedin.com/in/prabath-wijethilaka-4950b220b/" 
               target="_blank" 
