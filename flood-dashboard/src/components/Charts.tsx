@@ -56,8 +56,8 @@ export function StatusByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Status by District (Top 10)
       </h3>
       <ResponsiveContainer width="100%" height={400}>
@@ -94,8 +94,8 @@ export function PriorityByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Priority by District (Top 10)
       </h3>
       <ResponsiveContainer width="100%" height={400}>
@@ -139,8 +139,8 @@ export function EmergencyTypePieChart({ data }: ChartsProps) {
     .filter((d) => d.value > 0);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Emergency Types Distribution
       </h3>
       <ResponsiveContainer width="100%" height={400}>
@@ -184,8 +184,8 @@ export function PriorityPieChart({ data }: ChartsProps) {
   const colors = [PRIORITY_COLORS.critical, PRIORITY_COLORS.high, PRIORITY_COLORS.medium, PRIORITY_COLORS.low];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Priority Distribution
       </h3>
       <ResponsiveContainer width="100%" height={400}>
@@ -219,8 +219,8 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
   }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         People Affected by District (Top 15)
       </h3>
       <ResponsiveContainer width="100%" height={400}>
@@ -258,8 +258,8 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
   const chartData = Object.entries(totals).map(([name, value]) => ({ name, value }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      <h3 className="text-lg font-semibold mb-4 text-gray-800">
         Vulnerable Groups
       </h3>
       <ResponsiveContainer width="100%" height={300}>

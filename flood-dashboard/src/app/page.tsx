@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, AlertTriangle, Download, Clock } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Download, Clock, Waves } from 'lucide-react';
 import { SOSRecord, DistrictSummary } from '@/types';
 import { generateDistrictSummary, calculateTotals } from '@/lib/dataUtils';
 import { StatsCards, DistrictTable, EmergencyTypeTable } from '@/components/Dashboard';
@@ -122,14 +122,14 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <main className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-3">
-                <span className="text-4xl">🌊</span>
+                <Waves size={36} />
                 Flood Support Dashboard
               </h1>
               <p className="text-blue-100 mt-1">
@@ -179,8 +179,8 @@ export default function Home() {
         {loading && records.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
             <RefreshCw size={48} className="animate-spin text-blue-500 mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">Loading data from API...</p>
-            <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+            <p className="text-gray-600">Loading data from API...</p>
+            <p className="text-gray-400 text-sm mt-2">
               This may take a moment as we fetch all records
             </p>
           </div>
@@ -220,8 +220,8 @@ export default function Home() {
 
             {/* Footer Stats */}
             {apiStats && (
-              <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">
+              <div className="mt-8 p-6 bg-white rounded-xl shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
                   API Statistics Summary
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -253,11 +253,11 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-gray-400 py-6 mt-8">
+      <footer className="bg-gray-700 text-gray-300 py-6 mt-8">
         <div className="container mx-auto px-4 text-center">
           <p>Flood Support Dashboard - Data from floodsupport.org API</p>
           <p className="text-sm mt-1">
-            Built to help coordinate flood relief efforts in Sri Lanka 🇱🇰
+            Built to help coordinate flood relief efforts in Sri Lanka
           </p>
         </div>
       </footer>

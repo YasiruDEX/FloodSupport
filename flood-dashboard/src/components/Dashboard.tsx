@@ -1,6 +1,16 @@
 'use client';
 
 import { DistrictSummary } from '@/types';
+import { 
+  ClipboardList, 
+  Users, 
+  AlertCircle, 
+  Clock, 
+  CheckCircle, 
+  LifeBuoy, 
+  Search, 
+  PhoneOff 
+} from 'lucide-react';
 
 interface StatsCardsProps {
   totalCases: number;
@@ -24,14 +34,14 @@ export function StatsCards({
   verified,
 }: StatsCardsProps) {
   const cards = [
-    { label: 'Total Cases', value: totalCases, color: 'bg-blue-500', icon: '📋' },
-    { label: 'People Affected', value: totalPeople, color: 'bg-purple-500', icon: '👥' },
-    { label: 'Critical', value: critical, color: 'bg-red-600', icon: '🚨' },
-    { label: 'Pending', value: pending, color: 'bg-amber-500', icon: '⏳' },
-    { label: 'Verified', value: verified, color: 'bg-emerald-500', icon: '✅' },
-    { label: 'Rescued', value: rescued, color: 'bg-green-500', icon: '🛟' },
-    { label: 'Missing', value: missing, color: 'bg-orange-500', icon: '🔍' },
-    { label: 'Cannot Contact', value: cannotContact, color: 'bg-rose-500', icon: '📵' },
+    { label: 'Total Cases', value: totalCases, color: 'bg-blue-500', Icon: ClipboardList },
+    { label: 'People Affected', value: totalPeople, color: 'bg-purple-500', Icon: Users },
+    { label: 'Critical', value: critical, color: 'bg-red-600', Icon: AlertCircle },
+    { label: 'Pending', value: pending, color: 'bg-amber-500', Icon: Clock },
+    { label: 'Verified', value: verified, color: 'bg-emerald-500', Icon: CheckCircle },
+    { label: 'Rescued', value: rescued, color: 'bg-green-500', Icon: LifeBuoy },
+    { label: 'Missing', value: missing, color: 'bg-orange-500', Icon: Search },
+    { label: 'Cannot Contact', value: cannotContact, color: 'bg-rose-500', Icon: PhoneOff },
   ];
 
   return (
@@ -41,7 +51,7 @@ export function StatsCards({
           key={card.label}
           className={`${card.color} rounded-xl p-4 text-white shadow-lg transform hover:scale-105 transition-transform`}
         >
-          <div className="text-2xl mb-1">{card.icon}</div>
+          <card.Icon size={24} className="mb-1" />
           <div className="text-2xl font-bold">{card.value.toLocaleString()}</div>
           <div className="text-sm opacity-90">{card.label}</div>
         </div>
@@ -56,41 +66,41 @@ interface DistrictTableProps {
 
 export function DistrictTable({ data }: DistrictTableProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800">
           District-wise Summary
         </h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">District</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">Total</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">People</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">Pending</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">Verified</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">Rescued</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">No Contact</th>
-              <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-300">Missing</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">District</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">Total</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">People</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">Pending</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">Verified</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">Rescued</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">No Contact</th>
+              <th className="px-4 py-3 text-right font-semibold text-gray-600">Missing</th>
               <th className="px-4 py-3 text-right font-semibold text-red-600">Critical</th>
               <th className="px-4 py-3 text-right font-semibold text-orange-500">High</th>
               <th className="px-4 py-3 text-right font-semibold text-yellow-600">Medium</th>
               <th className="px-4 py-3 text-right font-semibold text-green-600">Low</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="divide-y divide-gray-200">
             {data.map((row, index) => (
               <tr
                 key={row.district}
-                className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                  index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-750'
+                className={`hover:bg-gray-50 ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                 }`}
               >
-                <td className="px-4 py-3 font-medium text-gray-800 dark:text-white">{row.district}</td>
-                <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{row.total}</td>
-                <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">{row.totalPeople.toLocaleString()}</td>
+                <td className="px-4 py-3 font-medium text-gray-800">{row.district}</td>
+                <td className="px-4 py-3 text-right text-gray-600">{row.total}</td>
+                <td className="px-4 py-3 text-right text-gray-600">{row.totalPeople.toLocaleString()}</td>
                 <td className="px-4 py-3 text-right">
                   <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
                     {row.pending}
@@ -135,17 +145,17 @@ interface EmergencyTypeTableProps {
 
 export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800">
           Emergency Types by District
         </h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 dark:bg-gray-700">
+          <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">District</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">District</th>
               <th className="px-4 py-3 text-right font-semibold text-red-600">Trapped</th>
               <th className="px-4 py-3 text-right font-semibold text-orange-500">Food/Water</th>
               <th className="px-4 py-3 text-right font-semibold text-purple-600">Medical</th>
@@ -154,15 +164,15 @@ export function EmergencyTypeTable({ data }: EmergencyTypeTableProps) {
               <th className="px-4 py-3 text-right font-semibold text-gray-500">Other</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="divide-y divide-gray-200">
             {data.map((row, index) => (
               <tr
                 key={row.district}
-                className={`hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                  index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-750'
+                className={`hover:bg-gray-50 ${
+                  index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
                 }`}
               >
-                <td className="px-4 py-3 font-medium text-gray-800 dark:text-white">{row.district}</td>
+                <td className="px-4 py-3 font-medium text-gray-800">{row.district}</td>
                 <td className="px-4 py-3 text-right font-bold text-red-600">{row.trapped}</td>
                 <td className="px-4 py-3 text-right font-bold text-orange-500">{row.foodWater}</td>
                 <td className="px-4 py-3 text-right text-purple-600">{row.medical}</td>
