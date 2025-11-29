@@ -15,29 +15,36 @@ import {
   Cell,
 } from 'recharts';
 
-// Professional muted color palette
+// Vibrant color palette for better visualization
 const STATUS_COLORS = {
-  pending: '#94a3b8',
-  verified: '#64748b',
-  rescued: '#475569',
-  cannotContact: '#cbd5e1',
-  completed: '#334155',
+  pending: '#f59e0b',      // Amber
+  verified: '#10b981',     // Emerald
+  rescued: '#3b82f6',      // Blue
+  cannotContact: '#ef4444', // Red
+  completed: '#8b5cf6',     // Purple
 };
 
 const PRIORITY_COLORS = {
-  critical: '#64748b',
-  high: '#94a3b8',
-  medium: '#cbd5e1',
-  low: '#e2e8f0',
+  critical: '#dc2626',  // Red-600
+  high: '#f97316',      // Orange-500
+  medium: '#eab308',    // Yellow-500
+  low: '#22c55e',       // Green-500
 };
 
 const EMERGENCY_COLORS = [
-  '#334155',
-  '#475569',
-  '#64748b',
-  '#94a3b8',
-  '#cbd5e1',
-  '#e2e8f0',
+  '#ef4444',  // Red - Trapped
+  '#f97316',  // Orange - Food/Water
+  '#06b6d4',  // Cyan - Medical
+  '#8b5cf6',  // Purple - Rescue
+  '#ec4899',  // Pink - Missing
+  '#6366f1',  // Indigo - Other
+];
+
+const VULNERABLE_COLORS = [
+  '#f472b6',  // Pink - Children
+  '#a78bfa',  // Purple - Elderly
+  '#60a5fa',  // Blue - Disabled
+  '#f87171',  // Red - Medical
 ];
 
 interface ChartsProps {
@@ -273,8 +280,8 @@ export function PeopleByDistrictChart({ data }: ChartsProps) {
             }} 
           />
           <Legend />
-          <Bar dataKey="Total People" fill="#475569" />
-          <Bar dataKey="Total Cases" fill="#94a3b8" />
+          <Bar dataKey="Total People" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Total Cases" fill="#22d3ee" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -292,7 +299,11 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
     { 'With Children': 0, 'With Elderly': 0, 'With Disabled': 0, 'Medical Emergency': 0 }
   );
 
-  const chartData = Object.entries(totals).map(([name, value]) => ({ name, value }));
+  const chartData = Object.entries(totals).map(([name, value], index) => ({ 
+    name, 
+    value,
+    fill: VULNERABLE_COLORS[index]
+  }));
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-6">
@@ -312,7 +323,11 @@ export function VulnerableGroupsChart({ data }: ChartsProps) {
               boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
             }} 
           />
-          <Bar dataKey="value" fill="#64748b" />
+          <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.fill} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
