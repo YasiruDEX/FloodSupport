@@ -704,7 +704,7 @@ export default function Home() {
             <RefreshCw size={40} className="animate-spin text-slate-500 mb-4" />
             <p className="text-slate-600">Loading data from API...</p>
             <p className="text-slate-400 text-sm mt-2">
-              This may take a moment as we fetch all records
+              This may take a moment as we fetch all live records
             </p>
           </div>
         ) : (
