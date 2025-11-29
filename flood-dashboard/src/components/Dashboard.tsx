@@ -34,14 +34,14 @@ export function StatsCards({
   verified,
 }: StatsCardsProps) {
   const cards = [
-    { label: 'Total Cases', value: totalCases, bgColor: 'bg-gradient-to-br from-blue-500 to-blue-600', textColor: 'text-white', iconBg: 'bg-blue-400/30', Icon: ClipboardList },
-    { label: 'People Affected', value: totalPeople, bgColor: 'bg-gradient-to-br from-indigo-500 to-indigo-600', textColor: 'text-white', iconBg: 'bg-indigo-400/30', Icon: Users },
-    { label: 'Critical', value: critical, bgColor: 'bg-gradient-to-br from-red-500 to-red-600', textColor: 'text-white', iconBg: 'bg-red-400/30', Icon: AlertCircle },
-    { label: 'Pending', value: pending, bgColor: 'bg-gradient-to-br from-amber-400 to-amber-500', textColor: 'text-white', iconBg: 'bg-amber-300/30', Icon: Clock },
-    { label: 'Verified', value: verified, bgColor: 'bg-gradient-to-br from-emerald-500 to-emerald-600', textColor: 'text-white', iconBg: 'bg-emerald-400/30', Icon: CheckCircle },
-    { label: 'Rescued', value: rescued, bgColor: 'bg-gradient-to-br from-cyan-500 to-cyan-600', textColor: 'text-white', iconBg: 'bg-cyan-400/30', Icon: LifeBuoy },
-    { label: 'Missing', value: missing, bgColor: 'bg-gradient-to-br from-orange-500 to-orange-600', textColor: 'text-white', iconBg: 'bg-orange-400/30', Icon: Search },
-    { label: 'Cannot Contact', value: cannotContact, bgColor: 'bg-gradient-to-br from-rose-500 to-rose-600', textColor: 'text-white', iconBg: 'bg-rose-400/30', Icon: PhoneOff },
+    { label: 'Total Cases', value: totalCases, borderColor: 'border-l-blue-500', iconColor: 'text-blue-500', iconBg: 'bg-blue-50', Icon: ClipboardList },
+    { label: 'People Affected', value: totalPeople, borderColor: 'border-l-indigo-500', iconColor: 'text-indigo-500', iconBg: 'bg-indigo-50', Icon: Users },
+    { label: 'Critical', value: critical, borderColor: 'border-l-red-500', iconColor: 'text-red-500', iconBg: 'bg-red-50', Icon: AlertCircle },
+    { label: 'Pending', value: pending, borderColor: 'border-l-amber-500', iconColor: 'text-amber-500', iconBg: 'bg-amber-50', Icon: Clock },
+    { label: 'Verified', value: verified, borderColor: 'border-l-emerald-500', iconColor: 'text-emerald-500', iconBg: 'bg-emerald-50', Icon: CheckCircle },
+    { label: 'Rescued', value: rescued, borderColor: 'border-l-teal-500', iconColor: 'text-teal-500', iconBg: 'bg-teal-50', Icon: LifeBuoy },
+    { label: 'Missing', value: missing, borderColor: 'border-l-cyan-500', iconColor: 'text-cyan-500', iconBg: 'bg-cyan-50', Icon: Search },
+    { label: 'Cannot Contact', value: cannotContact, borderColor: 'border-l-rose-500', iconColor: 'text-rose-500', iconBg: 'bg-rose-50', Icon: PhoneOff },
   ];
 
   return (
@@ -49,15 +49,15 @@ export function StatsCards({
       {cards.map((card) => (
         <div
           key={card.label}
-          className={`${card.bgColor} rounded-xl p-4 shadow-lg hover:shadow-xl transition-all hover:scale-105 cursor-default`}
+          className={`bg-white rounded-lg border border-slate-200 border-l-4 ${card.borderColor} p-4 shadow-sm hover:shadow-md transition-all`}
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-start mb-3">
             <div className={`p-2 rounded-lg ${card.iconBg}`}>
-              <card.Icon size={18} className={card.textColor} />
+              <card.Icon size={20} className={card.iconColor} />
             </div>
           </div>
-          <div className={`text-2xl font-bold ${card.textColor}`}>{card.value.toLocaleString()}</div>
-          <div className={`text-xs ${card.textColor} opacity-80 mt-1`}>{card.label}</div>
+          <div className="text-2xl font-bold text-slate-800">{card.value.toLocaleString()}</div>
+          <div className="text-xs text-slate-500 mt-1">{card.label}</div>
         </div>
       ))}
     </div>
