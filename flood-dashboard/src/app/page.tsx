@@ -270,13 +270,13 @@ export default function Home() {
     <div className={`bg-white rounded-xl border border-slate-200 mb-6 overflow-hidden transition-all shadow-sm ${showFilters ? '' : 'h-14'}`}>
       <button 
         onClick={() => setShowFilters(!showFilters)}
-        className="w-full px-4 py-3 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-slate-200 hover:from-indigo-100 hover:to-purple-100 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between bg-slate-50 border-b border-slate-200 hover:bg-slate-100 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <Filter size={18} className="text-indigo-600" />
+          <Filter size={18} className="text-slate-600" />
           <span className="font-medium text-slate-700">Filters</span>
           {hasActiveFilters && (
-            <span className="px-2 py-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-xs rounded-full font-medium">
+            <span className="px-2 py-0.5 bg-slate-800 text-white text-xs rounded-full font-medium">
               Active
             </span>
           )}
@@ -290,7 +290,7 @@ export default function Home() {
               Clear All
             </button>
           )}
-          {showFilters ? <ChevronUp size={18} className="text-indigo-600" /> : <ChevronDown size={18} className="text-indigo-600" />}
+          {showFilters ? <ChevronUp size={18} className="text-slate-600" /> : <ChevronDown size={18} className="text-slate-600" />}
         </div>
       </button>
       
@@ -299,13 +299,13 @@ export default function Home() {
           {/* Search bar */}
           <div className="mb-4">
             <div className="relative">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400" />
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search by name, reference, phone, address..."
                 value={filters.searchQuery}
                 onChange={(e) => setFilters(f => ({ ...f, searchQuery: e.target.value }))}
-                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none text-sm"
               />
               {filters.searchQuery && (
                 <button 
@@ -321,11 +321,11 @@ export default function Home() {
           {/* Filter dropdowns */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
             <div>
-              <label className="block text-xs font-medium text-indigo-600 mb-1">District</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">District</label>
               <select
                 value={filters.district}
                 onChange={(e) => setFilters(f => ({ ...f, district: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">All Districts</option>
                 {filterOptions.districts.map(d => (
@@ -335,11 +335,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-blue-600 mb-1">Status</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Status</label>
               <select
                 value={filters.status}
                 onChange={(e) => setFilters(f => ({ ...f, status: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">All Statuses</option>
                 {filterOptions.statuses.map(s => (
@@ -349,11 +349,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-red-600 mb-1">Priority</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Priority</label>
               <select
                 value={filters.priority}
                 onChange={(e) => setFilters(f => ({ ...f, priority: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">All Priorities</option>
                 {filterOptions.priorities.map(p => (
@@ -363,11 +363,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-purple-600 mb-1">Emergency Type</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Emergency Type</label>
               <select
                 value={filters.emergencyType}
                 onChange={(e) => setFilters(f => ({ ...f, emergencyType: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">All Types</option>
                 {filterOptions.emergencyTypes.map(t => (
@@ -377,11 +377,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-pink-600 mb-1">Has Children</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Has Children</label>
               <select
                 value={filters.hasChildren}
                 onChange={(e) => setFilters(f => ({ ...f, hasChildren: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">Any</option>
                 <option value="yes">Yes</option>
@@ -390,11 +390,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-amber-600 mb-1">Has Elderly</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Has Elderly</label>
               <select
                 value={filters.hasElderly}
                 onChange={(e) => setFilters(f => ({ ...f, hasElderly: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">Any</option>
                 <option value="yes">Yes</option>
@@ -403,11 +403,11 @@ export default function Home() {
             </div>
             
             <div>
-              <label className="block text-xs font-medium text-cyan-600 mb-1">Medical Emergency</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Medical Emergency</label>
               <select
                 value={filters.hasMedicalEmergency}
                 onChange={(e) => setFilters(f => ({ ...f, hasMedicalEmergency: e.target.value }))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none bg-white"
+                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-400 focus:border-slate-400 outline-none bg-white"
               >
                 <option value="all">Any</option>
                 <option value="yes">Yes</option>
@@ -420,7 +420,7 @@ export default function Home() {
           {hasActiveFilters && (
             <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
               <span className="text-sm text-slate-600">
-                Showing <strong className="text-indigo-600">{filteredRecords.length}</strong> of <strong>{records.length}</strong> records
+                Showing <strong className="text-slate-800">{filteredRecords.length}</strong> of <strong>{records.length}</strong> records
               </span>
             </div>
           )}
@@ -636,31 +636,31 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <main className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-lg sticky top-0 z-40">
+      <header className="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center gap-4">
               <a
                 href="https://floodsupport.org/sos/dashboard"
-                className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors"
+                className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors border border-slate-200"
               >
                 <ArrowLeft size={20} />
               </a>
               <div>
-                <h1 className="text-xl font-semibold flex items-center gap-2 text-white">
-                  <BarChart3 size={24} className="text-cyan-300" />
+                <h1 className="text-xl font-semibold flex items-center gap-2 text-slate-800">
+                  <BarChart3 size={24} className="text-slate-600" />
                   District Analytics Dashboard
                 </h1>
-                <p className="text-blue-100 text-sm mt-0.5">
+                <p className="text-slate-500 text-sm mt-0.5">
                   Real-time SOS data visualization for Sri Lanka flood relief
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               {lastUpdated && (
-                <div className="flex items-center gap-2 text-blue-100 text-sm">
+                <div className="flex items-center gap-2 text-slate-500 text-sm">
                   <Clock size={14} />
                   <span>Updated: {lastUpdated}</span>
                 </div>
@@ -668,7 +668,7 @@ export default function Home() {
               <button
                 onClick={exportCSV}
                 disabled={loading || districtSummary.length === 0}
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors backdrop-blur-sm"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors"
               >
                 <Download size={16} />
                 Export CSV
@@ -676,7 +676,7 @@ export default function Home() {
               <button
                 onClick={fetchData}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors shadow-md"
+                className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-medium transition-colors border border-slate-300"
               >
                 <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
                 {loading ? 'Loading...' : 'Refresh'}
@@ -700,7 +700,7 @@ export default function Home() {
 
         {loading && records.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
-            <RefreshCw size={40} className="animate-spin text-indigo-500 mb-4" />
+            <RefreshCw size={40} className="animate-spin text-slate-500 mb-4" />
             <p className="text-slate-600">Loading data from API...</p>
             <p className="text-slate-400 text-sm mt-2">
               This may take a moment as we fetch all records
@@ -715,7 +715,7 @@ export default function Home() {
                   onClick={() => setActiveView('charts')}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeView === 'charts' 
-                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md' 
+                      ? 'bg-slate-800 text-white shadow-md' 
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
@@ -728,7 +728,7 @@ export default function Home() {
                   onClick={() => setActiveView('records')}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeView === 'records' 
-                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md' 
+                      ? 'bg-slate-800 text-white shadow-md' 
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
@@ -784,8 +784,8 @@ export default function Home() {
 
             {/* Footer Stats */}
             {apiStats && (
-              <div className="mt-8 p-6 bg-gradient-to-r from-white via-blue-50 to-indigo-50 rounded-xl border border-slate-200 shadow-sm">
-                <h3 className="text-sm font-semibold mb-4 text-indigo-700 uppercase tracking-wide">
+              <div className="mt-8 p-6 bg-white rounded-xl border border-slate-200 shadow-sm">
+                <h3 className="text-sm font-semibold mb-4 text-slate-700 uppercase tracking-wide">
                   Summary Statistics {hasActiveFilters && '(Filtered)'}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
@@ -817,10 +817,27 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-4 mt-8">
+      <footer className="bg-white border-t border-slate-200 py-4 mt-8">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-blue-100 text-sm">
-            Flood Support Dashboard — Data sourced from floodsupport.org API
+          <p className="text-slate-500 text-sm">
+            Flood Support Dashboard — Data sourced from floodsupport.org API, developed by{' '}
+            <a 
+              href="https://www.linkedin.com/in/prabath-wijethilaka-4950b220b/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-700 hover:text-slate-900 underline underline-offset-2"
+            >
+              Prabath Wijethilaka
+            </a>
+            {' '}and{' '}
+            <a 
+              href="https://www.linkedin.com/in/yasirubasnayake/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-700 hover:text-slate-900 underline underline-offset-2"
+            >
+              Yasiru Basnayake
+            </a>
           </p>
         </div>
       </footer>
