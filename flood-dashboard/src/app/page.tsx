@@ -35,8 +35,10 @@ interface ChunkResponse {
   pagination: {
     currentPage: number;
     totalPages: number;
-    totalRecords: number;
+    totalCount: number;
+    limit: number;
     hasNextPage: boolean;
+    hasPrevPage: boolean;
   };
   fetchedAt: string;
   error?: string;
@@ -136,7 +138,7 @@ export default function Home() {
           
           // Update pagination info
           totalPages = data.pagination.totalPages;
-          totalRecords = data.pagination.totalRecords;
+          totalRecords = data.pagination.totalCount;
           
           // Update progress
           setFetchProgress({
