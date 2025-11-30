@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw, AlertTriangle, Download, Clock, ArrowLeft, BarChart3, Filter, X, Search, ChevronDown, ChevronUp, Eye, MapPin, Phone, Users } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Download, Clock, ArrowLeft, BarChart3, Filter, X, Search, ChevronDown, ChevronUp, Eye, MapPin, Phone, Users, TrendingUp } from 'lucide-react';
 import { SOSRecord, DistrictSummary } from '@/types';
 import { generateDistrictSummary, calculateTotals } from '@/lib/dataUtils';
 import { StatsCards, DistrictTable, EmergencyTypeTable } from '@/components/Dashboard';
@@ -14,6 +14,14 @@ import {
   VulnerableGroupsChart,
   DistrictImpactBubbleChart,
 } from '@/components/Charts';
+import {
+  SOSOverTimeChart,
+  RescuesOverTimeChart,
+  StatusTimelineChart,
+  DistrictActivityChart,
+  PriorityTrendChart,
+  ResponseTimeChart,
+} from '@/components/TimelineCharts';
 
 interface FetchResponse {
   success: boolean;
@@ -79,7 +87,7 @@ export default function Home() {
   });
   
   // View state
-  const [activeView, setActiveView] = useState<'charts' | 'records'>('charts');
+  const [activeView, setActiveView] = useState<'charts' | 'records' | 'timeline'>('charts');
   const [selectedRecord, setSelectedRecord] = useState<SOSRecord | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
@@ -711,31 +719,45 @@ export default function Home() {
           <>
             {/* View Toggle */}
             <div className="mb-6 flex items-center gap-2">
-              <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex shadow-sm">
+              <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex flex-wrap shadow-sm">
                 <button
                   onClick={() => setActiveView('charts')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 md:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeView === 'charts' 
                       ? 'bg-slate-800 text-white shadow-md' 
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1.5 md:gap-2">
                     <BarChart3 size={16} />
-                    Charts View
+                    <span className="hidden sm:inline">Charts</span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => setActiveView('timeline')}
+                  className={`px-3 md:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeView === 'timeline' 
+                      ? 'bg-slate-800 text-white shadow-md' 
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5 md:gap-2">
+                    <TrendingUp size={16} />
+                    <span className="hidden sm:inline">Time Analysis</span>
                   </span>
                 </button>
                 <button
                   onClick={() => setActiveView('records')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-3 md:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeView === 'records' 
                       ? 'bg-slate-800 text-white shadow-md' 
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-1.5 md:gap-2">
                     <Users size={16} />
-                    Records ({filteredRecords.length})
+                    <span className="hidden sm:inline">Records</span>
+                    <span className="text-xs opacity-75">({filteredRecords.length})</span>
                   </span>
                 </button>
               </div>
@@ -781,6 +803,35 @@ export default function Home() {
                 <div className="space-y-8">
                   <DistrictTable data={filteredSummary} />
                   <EmergencyTypeTable data={filteredSummary} />
+                </div>
+              </>
+            ) : activeView === 'timeline' ? (
+              <>
+                {/* Time Analysis Section Header */}
+                {/* <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-violet-50 rounded-xl border border-blue-100">
+                  <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                    <TrendingUp size={20} className="text-blue-600" />
+                    Time-Based Analysis
+                  </h2>
+                  <p className="text-sm text-slate-600 mt-1">
+                    Track SOS submissions, rescue operations, and district activity over time. Use filters on each chart to customize your view.
+                  </p>
+                </div> */}
+
+                {/* Time Series Charts Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <SOSOverTimeChart records={filteredRecords} />
+                  <RescuesOverTimeChart records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <StatusTimelineChart records={filteredRecords} />
+                  <PriorityTrendChart records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <DistrictActivityChart records={filteredRecords} />
+                  <ResponseTimeChart records={filteredRecords} />
                 </div>
               </>
             ) : (
