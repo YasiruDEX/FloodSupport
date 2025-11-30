@@ -50,27 +50,33 @@ const getDateKey = (dateStr: string | null | undefined) => {
   return date.toISOString().split('T')[0];
 };
 
-// Helper to get hour key (YYYY-MM-DD HH:00)
-const getHourKey = (dateStr: string | null | undefined) => {
-  if (!dateStr) return null;
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return null;
-  date.setMinutes(0, 0, 0);
-  return date.toISOString().slice(0, 13);
-};
-
 // ============================================
-// SOS Submissions Over Time Chart
+// SOS Submissions Over Time Chart (with District Comparison)
 // ============================================
 export function SOSOverTimeChart({ records }: TimelineChartsProps) {
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '24h'>('all');
   const [showFilter, setShowFilter] = useState(false);
-  const [viewMode, setViewMode] = useState<'daily' | 'hourly' | 'cumulative'>('daily');
+  const [showDistrictComparison, setShowDistrictComparison] = useState(true);
+  const [topN, setTopN] = useState(5);
 
-  const chartData = useMemo(() => {
+  // Get top N districts by total records
+  const topDistricts = useMemo(() => {
+    const districtCounts = new Map<string, number>();
+    records.forEach(r => {
+      if (r.district) {
+        districtCounts.set(r.district, (districtCounts.get(r.district) || 0) + 1);
+      }
+    });
+    return Array.from(districtCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, topN)
+      .map(([d]) => d);
+  }, [records, topN]);
+
+  // Unified chart data (no district breakdown)
+  const unifiedChartData = useMemo(() => {
     let filteredRecords = records.filter(r => r.createdAt);
     
-    // Apply time range filter
     const now = new Date();
     if (timeRange === '24h') {
       const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -80,64 +86,54 @@ export function SOSOverTimeChart({ records }: TimelineChartsProps) {
       filteredRecords = filteredRecords.filter(r => new Date(r.createdAt!) >= cutoff);
     }
 
-    if (viewMode === 'hourly') {
-      // Group by hour
-      const hourlyMap = new Map<string, number>();
-      filteredRecords.forEach(r => {
-        const key = getHourKey(r.createdAt);
-        if (key) {
-          hourlyMap.set(key, (hourlyMap.get(key) || 0) + 1);
-        }
-      });
-      
-      return Array.from(hourlyMap.entries())
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([hour, count]) => ({
-          time: new Date(hour + ':00:00Z').toLocaleString('en-US', { 
-            month: 'short', 
-            day: 'numeric', 
-            hour: '2-digit'
-          }),
-          count,
-        }));
-    } else if (viewMode === 'cumulative') {
-      // Cumulative view
-      const dailyMap = new Map<string, number>();
-      filteredRecords.forEach(r => {
-        const key = getDateKey(r.createdAt);
-        if (key) {
-          dailyMap.set(key, (dailyMap.get(key) || 0) + 1);
-        }
-      });
-      
-      const sorted = Array.from(dailyMap.entries()).sort(([a], [b]) => a.localeCompare(b));
-      let cumulative = 0;
-      return sorted.map(([date, count]) => {
-        cumulative += count;
-        return {
-          time: formatDate(date),
-          count,
-          cumulative,
-        };
-      });
-    } else {
-      // Daily view
-      const dailyMap = new Map<string, number>();
-      filteredRecords.forEach(r => {
-        const key = getDateKey(r.createdAt);
-        if (key) {
-          dailyMap.set(key, (dailyMap.get(key) || 0) + 1);
-        }
-      });
-      
-      return Array.from(dailyMap.entries())
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([date, count]) => ({
-          time: formatDate(date),
-          count,
-        }));
+    const dailyMap = new Map<string, number>();
+    filteredRecords.forEach(r => {
+      const key = getDateKey(r.createdAt);
+      if (key) {
+        dailyMap.set(key, (dailyMap.get(key) || 0) + 1);
+      }
+    });
+    
+    return Array.from(dailyMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, count]) => ({
+        time: formatDate(date),
+        Total: count,
+      }));
+  }, [records, timeRange]);
+
+  // District comparison chart data
+  const districtChartData = useMemo(() => {
+    let filteredRecords = records.filter(r => r.createdAt);
+    
+    const now = new Date();
+    if (timeRange === '24h') {
+      const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      filteredRecords = filteredRecords.filter(r => new Date(r.createdAt!) >= cutoff);
+    } else if (timeRange === '7d') {
+      const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      filteredRecords = filteredRecords.filter(r => new Date(r.createdAt!) >= cutoff);
     }
-  }, [records, timeRange, viewMode]);
+
+    const dailyMap = new Map<string, Record<string, number>>();
+    filteredRecords.forEach(r => {
+      const key = getDateKey(r.createdAt);
+      if (key && r.district && topDistricts.includes(r.district)) {
+        const current = dailyMap.get(key) || {};
+        current[r.district] = (current[r.district] || 0) + 1;
+        dailyMap.set(key, current);
+      }
+    });
+
+    return Array.from(dailyMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, districts]) => ({
+        time: formatDate(date),
+        ...districts,
+      }));
+  }, [records, timeRange, topDistricts]);
+
+  const chartData = showDistrictComparison ? districtChartData : unifiedChartData;
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
@@ -156,6 +152,33 @@ export function SOSOverTimeChart({ records }: TimelineChartsProps) {
 
       {showFilter && (
         <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-slate-600">District Comparison:</span>
+            <button
+              onClick={() => setShowDistrictComparison(!showDistrictComparison)}
+              className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
+                showDistrictComparison 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-slate-200 text-slate-600'
+              }`}
+            >
+              {showDistrictComparison ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          {showDistrictComparison && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-slate-600">Show Top:</span>
+              {[3, 5, 8, 10].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setTopN(n)}
+                  className={`px-2 py-1 text-xs rounded ${topN === n ? 'bg-slate-800 text-white' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'}`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             <span className="text-xs font-medium text-slate-600">Time Range:</span>
             {(['all', '7d', '24h'] as const).map(range => (
@@ -168,24 +191,46 @@ export function SOSOverTimeChart({ records }: TimelineChartsProps) {
               </button>
             ))}
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="text-xs font-medium text-slate-600">View Mode:</span>
-            {(['daily', 'hourly', 'cumulative'] as const).map(mode => (
-              <button
-                key={mode}
-                onClick={() => setViewMode(mode)}
-                className={`px-2 py-1 text-xs rounded capitalize ${viewMode === mode ? 'bg-slate-800 text-white' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'}`}
-              >
-                {mode}
-              </button>
-            ))}
-          </div>
         </div>
       )}
 
       <div className="h-[280px] md:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
-          {viewMode === 'cumulative' ? (
+          {showDistrictComparison ? (
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="time" 
+                tick={{ fontSize: 10 }} 
+                angle={-45} 
+                textAnchor="end" 
+                height={60}
+                stroke="#64748b"
+              />
+              <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#fff', 
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: '11px' }} />
+              {topDistricts.map((district, index) => (
+                <Line
+                  key={district}
+                  type="monotone"
+                  dataKey={district}
+                  name={district}
+                  stroke={DISTRICT_COLORS[index % DISTRICT_COLORS.length]}
+                  strokeWidth={2}
+                  dot={{ fill: DISTRICT_COLORS[index % DISTRICT_COLORS.length], strokeWidth: 0, r: 3 }}
+                  connectNulls
+                />
+              ))}
+            </LineChart>
+          ) : (
             <AreaChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis 
@@ -208,57 +253,22 @@ export function SOSOverTimeChart({ records }: TimelineChartsProps) {
               <Legend wrapperStyle={{ fontSize: '12px' }} />
               <Area 
                 type="monotone" 
-                dataKey="cumulative" 
-                name="Total Cumulative" 
+                dataKey="Total" 
+                name="All SOS Submissions" 
                 stroke={TIMELINE_COLORS.sos} 
                 fill={TIMELINE_COLORS.sos}
                 fillOpacity={0.3}
               />
-              <Line 
-                type="monotone" 
-                dataKey="count" 
-                name="Daily New" 
-                stroke="#f59e0b" 
-                strokeWidth={2}
-                dot={{ fill: '#f59e0b', strokeWidth: 0, r: 3 }}
-              />
             </AreaChart>
-          ) : (
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis 
-                dataKey="time" 
-                tick={{ fontSize: 10 }} 
-                angle={-45} 
-                textAnchor="end" 
-                height={60}
-                stroke="#64748b"
-              />
-              <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#fff', 
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  fontSize: '12px'
-                }}
-              />
-              <Bar 
-                dataKey="count" 
-                name="SOS Submissions" 
-                fill={TIMELINE_COLORS.sos}
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
           )}
         </ResponsiveContainer>
       </div>
 
       <div className="mt-3 text-xs text-slate-500 text-center">
-        {chartData.length > 0 && (
-          <span>
-            Showing {chartData.length} data points • Peak: {Math.max(...chartData.map(d => d.count))} submissions
-          </span>
+        {showDistrictComparison ? (
+          <span>Comparing {topN >= 999 ? 'all' : `top ${topN}`} districts • {chartData.length} time points</span>
+        ) : (
+          <span>Unified view • {chartData.length} data points</span>
         )}
       </div>
     </div>
@@ -266,34 +276,53 @@ export function SOSOverTimeChart({ records }: TimelineChartsProps) {
 }
 
 // ============================================
-// Rescues Over Time Chart
+// Rescues Over Time Chart (with District Comparison)
 // ============================================
 export function RescuesOverTimeChart({ records }: TimelineChartsProps) {
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '24h'>('all');
   const [showFilter, setShowFilter] = useState(false);
+  const [showDistrictComparison, setShowDistrictComparison] = useState(true);
+  const [topN, setTopN] = useState(5);
 
-  const chartData = useMemo(() => {
-    // Get records with rescue timestamps (rescuedAt or completedAt or status is RESCUED/COMPLETED)
-    let rescuedRecords = records.filter(r => 
+  // Get rescued/completed records
+  const rescuedRecords = useMemo(() => {
+    let filtered = records.filter(r => 
       r.rescuedAt || r.completedAt || r.status === 'RESCUED' || r.status === 'COMPLETED'
     );
 
     const now = new Date();
     if (timeRange === '24h') {
       const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      rescuedRecords = rescuedRecords.filter(r => {
+      filtered = filtered.filter(r => {
         const date = r.rescuedAt || r.completedAt || r.updatedAt;
         return date && new Date(date) >= cutoff;
       });
     } else if (timeRange === '7d') {
       const cutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      rescuedRecords = rescuedRecords.filter(r => {
+      filtered = filtered.filter(r => {
         const date = r.rescuedAt || r.completedAt || r.updatedAt;
         return date && new Date(date) >= cutoff;
       });
     }
+    return filtered;
+  }, [records, timeRange]);
 
-    // Group by date
+  // Get top N districts by rescue count
+  const topDistricts = useMemo(() => {
+    const districtCounts = new Map<string, number>();
+    rescuedRecords.forEach(r => {
+      if (r.district) {
+        districtCounts.set(r.district, (districtCounts.get(r.district) || 0) + 1);
+      }
+    });
+    return Array.from(districtCounts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, topN)
+      .map(([d]) => d);
+  }, [rescuedRecords, topN]);
+
+  // Unified chart data (no district breakdown)
+  const unifiedChartData = useMemo(() => {
     const dailyMap = new Map<string, { rescued: number; completed: number }>();
     rescuedRecords.forEach(r => {
       const date = r.rescuedAt || r.completedAt || r.updatedAt;
@@ -313,14 +342,36 @@ export function RescuesOverTimeChart({ records }: TimelineChartsProps) {
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, counts]) => ({
         time: formatDate(date),
-        rescued: counts.rescued,
-        completed: counts.completed,
-        total: counts.rescued + counts.completed,
+        Rescued: counts.rescued,
+        Completed: counts.completed,
+        Total: counts.rescued + counts.completed,
       }));
-  }, [records, timeRange]);
+  }, [rescuedRecords]);
 
-  const totalRescued = chartData.reduce((sum, d) => sum + d.rescued, 0);
-  const totalCompleted = chartData.reduce((sum, d) => sum + d.completed, 0);
+  // District comparison chart data
+  const districtChartData = useMemo(() => {
+    const dailyMap = new Map<string, Record<string, number>>();
+    rescuedRecords.forEach(r => {
+      const date = r.rescuedAt || r.completedAt || r.updatedAt;
+      const key = getDateKey(date);
+      if (key && r.district && topDistricts.includes(r.district)) {
+        const current = dailyMap.get(key) || {};
+        current[r.district] = (current[r.district] || 0) + 1;
+        dailyMap.set(key, current);
+      }
+    });
+
+    return Array.from(dailyMap.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, districts]) => ({
+        time: formatDate(date),
+        ...districts,
+      }));
+  }, [rescuedRecords, topDistricts]);
+
+  const chartData = showDistrictComparison ? districtChartData : unifiedChartData;
+  const totalRescued = unifiedChartData.reduce((sum, d) => sum + (d.Rescued || 0), 0);
+  const totalCompleted = unifiedChartData.reduce((sum, d) => sum + (d.Completed || 0), 0);
 
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-3 md:p-6">
@@ -338,7 +389,34 @@ export function RescuesOverTimeChart({ records }: TimelineChartsProps) {
       </div>
 
       {showFilter && (
-        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+        <div className="mb-4 p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-medium text-slate-600">District Comparison:</span>
+            <button
+              onClick={() => setShowDistrictComparison(!showDistrictComparison)}
+              className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
+                showDistrictComparison 
+                  ? 'bg-emerald-600 text-white' 
+                  : 'bg-slate-200 text-slate-600'
+              }`}
+            >
+              {showDistrictComparison ? 'ON' : 'OFF'}
+            </button>
+          </div>
+          {showDistrictComparison && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-slate-600">Show:</span>
+              {[3, 5, 8, 10, 'all'].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setTopN(n === 'all' ? 999 : n as number)}
+                  className={`px-2 py-1 text-xs rounded ${(n === 'all' ? topN === 999 : topN === n) ? 'bg-slate-800 text-white' : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-100'}`}
+                >
+                  {n === 'all' ? 'All' : `Top ${n}`}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             <span className="text-xs font-medium text-slate-600">Time Range:</span>
             {(['all', '7d', '24h'] as const).map(range => (
@@ -356,51 +434,93 @@ export function RescuesOverTimeChart({ records }: TimelineChartsProps) {
 
       <div className="h-[280px] md:h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-            <XAxis 
-              dataKey="time" 
-              tick={{ fontSize: 10 }} 
-              angle={-45} 
-              textAnchor="end" 
-              height={60}
-              stroke="#64748b"
-            />
-            <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: '#fff', 
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '12px'
-              }}
-            />
-            <Legend wrapperStyle={{ fontSize: '12px' }} />
-            <Area 
-              type="monotone" 
-              dataKey="rescued" 
-              name="Rescued" 
-              stroke={TIMELINE_COLORS.rescued} 
-              fill={TIMELINE_COLORS.rescued}
-              fillOpacity={0.4}
-              stackId="1"
-            />
-            <Area 
-              type="monotone" 
-              dataKey="completed" 
-              name="Completed" 
-              stroke="#8b5cf6" 
-              fill="#8b5cf6"
-              fillOpacity={0.4}
-              stackId="1"
-            />
-          </AreaChart>
+          {showDistrictComparison ? (
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="time" 
+                tick={{ fontSize: 10 }} 
+                angle={-45} 
+                textAnchor="end" 
+                height={60}
+                stroke="#64748b"
+              />
+              <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#fff', 
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: '11px' }} />
+              {topDistricts.map((district, index) => (
+                <Line
+                  key={district}
+                  type="monotone"
+                  dataKey={district}
+                  name={district}
+                  stroke={DISTRICT_COLORS[index % DISTRICT_COLORS.length]}
+                  strokeWidth={2}
+                  dot={{ fill: DISTRICT_COLORS[index % DISTRICT_COLORS.length], strokeWidth: 0, r: 3 }}
+                  connectNulls
+                />
+              ))}
+            </LineChart>
+          ) : (
+            <AreaChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis 
+                dataKey="time" 
+                tick={{ fontSize: 10 }} 
+                angle={-45} 
+                textAnchor="end" 
+                height={60}
+                stroke="#64748b"
+              />
+              <YAxis tick={{ fontSize: 10 }} stroke="#64748b" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: '#fff', 
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '8px',
+                  fontSize: '12px'
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: '12px' }} />
+              <Area 
+                type="monotone" 
+                dataKey="Rescued" 
+                name="Rescued" 
+                stroke={TIMELINE_COLORS.rescued} 
+                fill={TIMELINE_COLORS.rescued}
+                fillOpacity={0.4}
+                stackId="1"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="Completed" 
+                name="Completed" 
+                stroke="#8b5cf6" 
+                fill="#8b5cf6"
+                fillOpacity={0.4}
+                stackId="1"
+              />
+            </AreaChart>
+          )}
         </ResponsiveContainer>
       </div>
 
       <div className="mt-3 flex justify-center gap-6 text-xs">
-        <span className="text-emerald-600 font-medium">Total Rescued: {totalRescued}</span>
-        <span className="text-violet-600 font-medium">Total Completed: {totalCompleted}</span>
+        {showDistrictComparison ? (
+          <span className="text-slate-500">Comparing {topN >= 999 ? 'all' : `top ${topN}`} districts • {chartData.length} time points</span>
+        ) : (
+          <>
+            <span className="text-emerald-600 font-medium">Total Rescued: {totalRescued}</span>
+            <span className="text-violet-600 font-medium">Total Completed: {totalCompleted}</span>
+          </>
+        )}
       </div>
     </div>
   );
