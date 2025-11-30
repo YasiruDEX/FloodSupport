@@ -109,6 +109,22 @@ export default function Home() {
   const [selectedRecord, setSelectedRecord] = useState<SOSRecord | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
+  // Register page view on initial load (only once)
+  useEffect(() => {
+    const registerView = async () => {
+      try {
+        await fetch('https://h847mxpg-8085.inc1.devtunnels.ms/api/flooddashboard', {
+          method: 'GET',
+          mode: 'no-cors', // Handle CORS for external API
+        });
+      } catch {
+        // Silently fail - view registration is not critical
+        console.log('View registration skipped');
+      }
+    };
+    registerView();
+  }, []); // Empty dependency array ensures this runs only once on mount
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
