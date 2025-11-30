@@ -768,16 +768,16 @@ export default function Home() {
               <div className="mt-4 w-full max-w-md">
                 <div className="flex justify-between text-sm text-slate-500 mb-2">
                   <span>Fetching records...</span>
-                  <span>{fetchProgress.recordsFetched} / {fetchProgress.totalRecords}</span>
+                  <span>{fetchProgress.recordsFetched || 0} / {fetchProgress.totalRecords || '...'}</span>
                 </div>
                 <div className="w-full bg-slate-200 rounded-full h-2.5">
                   <div 
                     className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                    style={{ width: `${(fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100}%` }}
+                    style={{ width: `${fetchProgress.totalRecords ? (fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100 : 0}%` }}
                   />
                 </div>
                 <p className="text-xs text-slate-400 mt-2 text-center">
-                  Page {fetchProgress.currentPage} of {fetchProgress.totalPages}
+                  Page {fetchProgress.currentPage || 1} of {fetchProgress.totalPages || '?'}
                 </p>
               </div>
             )}
@@ -789,29 +789,6 @@ export default function Home() {
           </div>
         ) : (
           <>
-            {/* Progressive Loading Banner */}
-            {loading && records.length > 0 && fetchProgress && !fetchProgress.isComplete && (
-              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <RefreshCw size={16} className="animate-spin text-blue-600" />
-                    <span className="text-sm text-blue-700 font-medium">
-                      Fetching data... {fetchProgress.recordsFetched} of {fetchProgress.totalRecords} records
-                    </span>
-                  </div>
-                  <span className="text-xs text-blue-500">
-                    {Math.round((fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100)}%
-                  </span>
-                </div>
-                <div className="w-full bg-blue-200 rounded-full h-1.5 mt-2">
-                  <div 
-                    className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
-                    style={{ width: `${(fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100}%` }}
-                  />
-                </div>
-              </div>
-            )}
-
             {/* View Toggle */}
             <div className="mb-6 flex items-center gap-2">
               <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex flex-wrap shadow-sm">
@@ -996,6 +973,41 @@ export default function Home() {
       
       {/* Record Detail Modal */}
       <RecordDetailModal />
+
+      {/* Fixed Loading Indicator - Shows when data is still being fetched */}
+      {loading && records.length > 0 && fetchProgress && !fetchProgress.isComplete && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md md:max-w-lg">
+          <div className="bg-white/95 backdrop-blur-sm border border-blue-200 rounded-xl shadow-lg p-3 md:p-4">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-4 border-blue-100 border-t-blue-600 animate-spin" />
+                <span className="absolute inset-0 flex items-center justify-center text-[10px] md:text-xs font-bold text-blue-600">
+                  {fetchProgress.totalRecords ? Math.round((fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100) : 0}%
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs md:text-sm font-semibold text-slate-700 truncate">
+                    Loading Data...
+                  </span>
+                  <span className="text-[10px] md:text-xs text-slate-500 ml-2 shrink-0">
+                    {(fetchProgress.recordsFetched || 0).toLocaleString()} / {(fetchProgress.totalRecords || 0).toLocaleString()}
+                  </span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-1.5 md:h-2">
+                  <div 
+                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full transition-all duration-300"
+                    style={{ width: `${fetchProgress.totalRecords ? (fetchProgress.recordsFetched / fetchProgress.totalRecords) * 100 : 0}%` }}
+                  />
+                </div>
+                <p className="text-[10px] md:text-xs text-slate-400 mt-1">
+                  Visualizations update as data loads • Page {fetchProgress.currentPage || 1}/{fetchProgress.totalPages || '?'}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
