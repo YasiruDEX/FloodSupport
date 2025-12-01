@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw, AlertTriangle, Download, Clock, ArrowLeft, BarChart3, Filter, X, Search, ChevronDown, ChevronUp, Eye, MapPin, Phone, Users, TrendingUp } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Download, Clock, ArrowLeft, BarChart3, Filter, X, Search, ChevronDown, ChevronUp, Eye, MapPin, Phone, Users, TrendingUp, Smartphone } from 'lucide-react';
 import { SOSRecord, DistrictSummary } from '@/types';
 import { generateDistrictSummary, calculateTotals } from '@/lib/dataUtils';
 import { StatsCards, DistrictTable, EmergencyTypeTable } from '@/components/Dashboard';
@@ -22,6 +22,17 @@ import {
   PriorityTrendChart,
   ResponseTimeChart,
 } from '@/components/TimelineCharts';
+import {
+  SourceDistributionChart,
+  SourceStatsCards,
+  StatusBySourceChart,
+  PriorityBySourceChart,
+  SourceOverTimeChart,
+  EmergencyTypesBySourceChart,
+  PeopleBySourceChart,
+  SourceComparisonTable,
+  DistrictsBySourceChart,
+} from '@/components/SourceAnalysisCharts';
 
 interface ChunkResponse {
   success: boolean;
@@ -105,7 +116,7 @@ export default function Home() {
   });
   
   // View state
-  const [activeView, setActiveView] = useState<'charts' | 'records' | 'timeline'>('charts');
+  const [activeView, setActiveView] = useState<'charts' | 'records' | 'timeline' | 'source'>('charts');
   const [selectedRecord, setSelectedRecord] = useState<SOSRecord | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
@@ -862,6 +873,19 @@ export default function Home() {
                   </span>
                 </button>
                 <button
+                  onClick={() => setActiveView('source')}
+                  className={`px-3 md:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeView === 'source' 
+                      ? 'bg-slate-800 text-white shadow-md' 
+                      : 'text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className="flex items-center gap-1.5 md:gap-2">
+                    <Smartphone size={16} />
+                    <span className="hidden sm:inline">Source</span>
+                  </span>
+                </button>
+                <button
                   onClick={() => setActiveView('records')}
                   className={`px-3 md:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     activeView === 'records' 
@@ -947,6 +971,36 @@ export default function Home() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                   <DistrictActivityChart records={filteredRecords} />
                   <ResponseTimeChart records={filteredRecords} />
+                </div>
+              </>
+            ) : activeView === 'source' ? (
+              <>
+                {/* Source Analysis Section */}
+                <div className="mb-6">
+                  <SourceStatsCards records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <SourceDistributionChart records={filteredRecords} />
+                  <PeopleBySourceChart records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <StatusBySourceChart records={filteredRecords} />
+                  <PriorityBySourceChart records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <SourceOverTimeChart records={filteredRecords} />
+                  <DistrictsBySourceChart records={filteredRecords} />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                  <EmergencyTypesBySourceChart records={filteredRecords} />
+                </div>
+
+                <div className="mb-8">
+                  <SourceComparisonTable records={filteredRecords} />
                 </div>
               </>
             ) : (
