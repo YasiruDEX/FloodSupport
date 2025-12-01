@@ -131,49 +131,74 @@ export default function Home() {
     setRecords([]);
     setFetchProgress(null);
 
-    const CHUNK_SIZE = 200;
-    let page = 1;
-    let totalPages = 1;
-    let totalRecords = 0;
-    const allRecords: SOSRecord[] = [];
+    const CHUNK_SIZE = 500; // Larger chunks = fewer requests
+    const PARALLEL_BATCHES = 5; // Number of concurrent requests per batch
 
     try {
-      // Fetch data in chunks
-      while (page <= totalPages) {
-        const response = await fetch(`/api/sos/chunk?page=${page}&limit=${CHUNK_SIZE}`);
-        const data: ChunkResponse = await response.json();
+      // First, fetch page 1 to get total pages and initial data
+      const firstResponse = await fetch(`/api/sos/chunk?page=1&limit=${CHUNK_SIZE}`);
+      const firstData: ChunkResponse = await firstResponse.json();
 
-        if (data.success) {
-          // Add new records
-          allRecords.push(...data.records);
+      if (!firstData.success) {
+        throw new Error(firstData.error || 'Failed to fetch initial data');
+      }
+
+      const totalPages = firstData.pagination.totalPages;
+      const totalRecords = firstData.pagination.totalCount;
+      
+      // Initialize with first page data
+      let allRecords: SOSRecord[] = [...firstData.records];
+      setRecords([...allRecords]);
+      setDistrictSummary(generateDistrictSummary(allRecords));
+      setApiStats(firstData.stats);
+      setLastUpdated(new Date(firstData.fetchedAt).toLocaleString());
+      
+      setFetchProgress({
+        currentPage: 1,
+        totalPages,
+        recordsFetched: allRecords.length,
+        totalRecords,
+        isComplete: totalPages === 1,
+      });
+
+      // If there are more pages, fetch them in parallel batches
+      if (totalPages > 1) {
+        const remainingPages = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
+        
+        // Process pages in parallel batches to avoid overwhelming the server
+        for (let i = 0; i < remainingPages.length; i += PARALLEL_BATCHES) {
+          const batchPages = remainingPages.slice(i, i + PARALLEL_BATCHES);
           
-          // Update state progressively
+          // Fetch batch in parallel
+          const batchPromises = batchPages.map(page =>
+            fetch(`/api/sos/chunk?page=${page}&limit=${CHUNK_SIZE}`)
+              .then(res => res.json())
+              .then((data: ChunkResponse) => ({ page, data }))
+          );
+          
+          const batchResults = await Promise.all(batchPromises);
+          
+          // Sort by page number and add to records
+          batchResults
+            .sort((a, b) => a.page - b.page)
+            .forEach(({ data }) => {
+              if (data.success) {
+                allRecords = [...allRecords, ...data.records];
+              }
+            });
+          
+          // Update state after each batch
           setRecords([...allRecords]);
-          const summary = generateDistrictSummary(allRecords);
-          setDistrictSummary(summary);
+          setDistrictSummary(generateDistrictSummary(allRecords));
           
-          // Update pagination info
-          totalPages = data.pagination.totalPages;
-          totalRecords = data.pagination.totalCount;
-          
-          // Update progress
+          const completedPages = Math.min(i + PARALLEL_BATCHES + 1, totalPages);
           setFetchProgress({
-            currentPage: page,
+            currentPage: completedPages,
             totalPages,
             recordsFetched: allRecords.length,
             totalRecords,
-            isComplete: page >= totalPages,
+            isComplete: completedPages >= totalPages,
           });
-
-          // Set stats from first page
-          if (page === 1) {
-            setApiStats(data.stats);
-          }
-          
-          setLastUpdated(new Date(data.fetchedAt).toLocaleString());
-          page++;
-        } else {
-          throw new Error(data.error || 'Failed to fetch data');
         }
       }
 
