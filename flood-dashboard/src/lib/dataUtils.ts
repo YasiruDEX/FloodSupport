@@ -43,13 +43,18 @@ export function generateDistrictSummary(records: SOSRecord[]): DistrictSummary[]
     // Status counts
     const status = (record.status || '').toUpperCase();
     switch (status) {
-      case 'VERIFIED': d.verified += 1; break;
+      case 'VERIFIED': break;
       case 'RESCUED': d.rescued += 1; break;
       case 'PENDING': d.pending += 1; break;
       case 'CANNOT_CONTACT': d.cannotContact += 1; break;
       case 'ACKNOWLEDGED': d.acknowledged += 1; break;
       case 'IN_PROGRESS': d.inProgress += 1; break;
       case 'COMPLETED': d.completed += 1; break;
+    }
+    
+    // Verified count: everything except PENDING, CANCELLED, and CANNOT_CONTACT
+    if (status !== 'PENDING' && status !== 'CANCELLED' && status !== 'CANNOT_CONTACT') {
+      d.verified += 1;
     }
 
     // Priority counts
