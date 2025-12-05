@@ -14,6 +14,7 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
+  CheckCheck,
 } from 'lucide-react';
 
 interface StatsCardsProps {
@@ -25,6 +26,7 @@ interface StatsCardsProps {
   missing: number;
   cannotContact: number;
   verified: number;
+  completed: number;
 }
 
 export function StatsCards({
@@ -36,6 +38,7 @@ export function StatsCards({
   missing,
   cannotContact,
   verified,
+  completed,
 }: StatsCardsProps) {
   const cards = [
     { label: 'Total Cases', value: totalCases, borderColor: 'border-l-blue-500', iconColor: 'text-blue-500', iconBg: 'bg-blue-50', Icon: ClipboardList },
@@ -44,26 +47,29 @@ export function StatsCards({
     { label: 'Pending', value: pending, borderColor: 'border-l-amber-500', iconColor: 'text-amber-500', iconBg: 'bg-amber-50', Icon: Clock },
     { label: 'Verified', value: verified, borderColor: 'border-l-emerald-500', iconColor: 'text-emerald-500', iconBg: 'bg-emerald-50', Icon: CheckCircle },
     { label: 'Rescued', value: rescued, borderColor: 'border-l-teal-500', iconColor: 'text-teal-500', iconBg: 'bg-teal-50', Icon: LifeBuoy },
+    { label: 'Completed', value: completed, borderColor: 'border-l-green-500', iconColor: 'text-green-500', iconBg: 'bg-green-50', Icon: CheckCheck },
     { label: 'Missing', value: missing, borderColor: 'border-l-cyan-500', iconColor: 'text-cyan-500', iconBg: 'bg-cyan-50', Icon: Search },
     { label: 'Cannot Contact', value: cannotContact, borderColor: 'border-l-rose-500', iconColor: 'text-rose-500', iconBg: 'bg-rose-50', Icon: PhoneOff },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-2 md:gap-4">
-      {cards.map((card) => (
-        <div
-          key={card.label}
-          className={`bg-white rounded-lg border border-slate-200 border-l-4 ${card.borderColor} p-2 md:p-4 shadow-sm hover:shadow-md transition-all`}
-        >
-          <div className="flex items-center justify-start mb-1.5 md:mb-3">
-            <div className={`p-1.5 md:p-2 rounded-lg ${card.iconBg}`}>
-              <card.Icon size={16} className={`md:w-5 md:h-5 ${card.iconColor}`} />
+    <div className="w-full overflow-x-auto">
+      <div className="flex gap-3 min-w-max">
+        {cards.map((card) => (
+          <div
+            key={card.label}
+            className={`flex-1 min-w-[120px] max-w-[160px] bg-white rounded-xl border border-slate-200 border-l-4 ${card.borderColor} p-3 shadow-sm hover:shadow-md transition-all duration-200`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <div className={`p-1.5 rounded-lg ${card.iconBg}`}>
+                <card.Icon size={14} className={card.iconColor} />
+              </div>
             </div>
+            <div className="text-xl font-bold text-slate-800 leading-tight">{card.value.toLocaleString()}</div>
+            <div className="text-[11px] text-slate-500 mt-1 font-medium truncate">{card.label}</div>
           </div>
-          <div className="text-lg md:text-2xl font-bold text-slate-800">{card.value.toLocaleString()}</div>
-          <div className="text-[10px] md:text-xs text-slate-500 mt-0.5 md:mt-1 truncate">{card.label}</div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

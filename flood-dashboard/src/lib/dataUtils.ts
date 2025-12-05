@@ -49,7 +49,7 @@ export function generateDistrictSummary(records: SOSRecord[]): DistrictSummary[]
       case 'CANNOT_CONTACT': d.cannotContact += 1; break;
       case 'ACKNOWLEDGED': d.acknowledged += 1; break;
       case 'IN_PROGRESS': d.inProgress += 1; break;
-      case 'COMPLETED': d.completed += 1; break;
+      case 'COMPLETED': d.completed += 1; d.rescued += 1; break;
     }
     
     // Verified count: everything except PENDING, CANCELLED, and CANNOT_CONTACT

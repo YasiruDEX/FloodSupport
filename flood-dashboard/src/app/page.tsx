@@ -901,6 +901,7 @@ export default function Home() {
                   missing={filteredTotals.missing}
                   cannotContact={filteredTotals.cannotContact}
                   verified={filteredTotals.verified}
+                  completed={filteredTotals.completed}
                 />
               </div>
             )}
